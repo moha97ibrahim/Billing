@@ -23,7 +23,6 @@ import androidx.loader.content.Loader;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
-import com.example.billing.cartDB.cartContract;
 import com.example.billing.global.CartList;
 
 import java.util.ArrayList;
@@ -72,21 +71,21 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
 
         String pro[] = {
-                cartContract.cartItem._ID,
-                cartContract.cartItem.COLUMN_FOOD_NAME,
-                cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
-                cartContract.cartItem.COLUMN_FOOD_PRICE
+                BillContract.addFood._ID_CART,
+                BillContract.addFood.COLUMN_FOOD_NAME_CART,
+                //cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
+                BillContract.addFood.COLUMN_FOOD_QUANTITY_CART,
+                BillContract.addFood.COLUMN_FOOD_PRICE_CART
         };
 
         Log.e("on create loader 1", query);
 
 
-        String select = "((" + cartContract.cartItem._ID + " IN " + "(" + query + ")" + ") )";
 
         return new CursorLoader(getActivity(),
-                cartContract.cartItem.CONTENT_URI,
+                BillContract.addFood.CONTENT_URI_CART,
                 pro,
-                select,
+                null,
                 null,
                 null);
     }
@@ -103,6 +102,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cartCursorAdapter.swapCursor(data);
+
     }
 
     @Override

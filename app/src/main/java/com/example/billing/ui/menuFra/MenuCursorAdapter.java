@@ -1,9 +1,13 @@
 package com.example.billing.ui.menuFra;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
-import android.os.Bundle;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,15 +17,21 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.Loader;
 
+import com.example.billing.MainActivity;
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
-import com.example.billing.cartDB.cartContract;
+
+import com.example.billing.addFoodDB.BillDbHelper;
 import com.example.billing.global.CartList;
+
+import java.util.ArrayList;
+
+import static com.example.billing.addFoodDB.BillContract.addFood.CONTENT_URI_CART;
+import static com.example.billing.addFoodDB.BillContract.addFood.TABLE_NAME;
+import static com.example.billing.addFoodDB.BillContract.addFood.TABLE_NAME_CART;
+import static com.example.billing.addFoodDB.BillContract.addFood._ID_CART;
 
 public class MenuCursorAdapter extends CursorAdapter {
     public MenuCursorAdapter(Context context, Cursor c) {
@@ -32,6 +42,9 @@ public class MenuCursorAdapter extends CursorAdapter {
     private String CL;
     private Context context;
     private CartList cartList;
+    private Uri mUri;
+    private BillDbHelper dbHelper;
+    private ArrayList<String> ids;
 
 
     @Override
@@ -42,10 +55,11 @@ public class MenuCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, final Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
 
-        TextView name = view.findViewById(R.id.menuFoodNameView);
-        TextView price = view.findViewById(R.id.menuFoodPriceView);
+
+        final TextView name = view.findViewById(R.id.menuFoodNameView);
+        final TextView price = view.findViewById(R.id.menuFoodPriceView);
         TextView ingredient = view.findViewById(R.id.menuFoodIngredientsView);
 
 
@@ -55,69 +69,51 @@ public class MenuCursorAdapter extends CursorAdapter {
         int ID = cursor.getColumnIndex(BillContract.addFood._ID);
         int priceColumnIndex = cursor.getColumnIndex(BillContract.addFood.COLUMN_FOOD_PRICE);
         int ingredientsColumnIndex = cursor.getColumnIndex(BillContract.addFood.COLUMN_FOOD_INGREDIENTS);
-
-        IDS = cursor.getString(ID);
-
-        //cart
-        cartList = (CartList) context.getApplicationContext();
-        Log.e("temp", "" + cartList.getListCart());
-
-        if (cartList.getListCart() == null) {
-            CL = "";
-        } else {
-            CL = "" + cartList.getListCart();
-        }
-
-
-        // markAsAdded(cartList.getListCart());
-        int mark = (int) getItemId(cursor.getPosition());
+        final String names = cursor.getString(nameColumnIndex);
+        final String prices = cursor.getString(priceColumnIndex);
+        String ingredients = cursor.getString(ingredientsColumnIndex);
+        final String id = cursor.getString(ID);
+        name.setText(names);
+        price.setText(prices);
+        ingredient.setText(ingredients);
+        final int mark = (int) getItemId(cursor.getPosition());
+        dbHelper = new BillDbHelper(context);
         addBtn.setTag(cursor.getPosition());
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToCart(v,addBtn);
+                addToCart(addBtn, context, mark);
             }
         });
-
-
-        String names = cursor.getString(nameColumnIndex);
-        String prices = cursor.getString(priceColumnIndex);
-        String ingredients = cursor.getString(ingredientsColumnIndex);
-
-
-        name.setText(names);
-        price.setText(prices);
-        ingredient.setText(ingredients);
-
-
-        changeMarkAsAdded(mark,addBtn);
-
+        changeMarkAsAdded(mark, addBtn, context);
     }
 
-    private void addToCart(View v, Button addBtn) {
-        Object object = v.getTag();
-        int LIST = (int) getItemId((int) object);
-        Log.e("id", "" + LIST);
-        if (CL.contains(String.valueOf(LIST))) {
-            Log.e("temp", "already added");
-        } else {
-            CL = CL + "," + LIST;
-            Log.e("temp", "=added=" + LIST);
+    private void addToCart(Button addBtn, Context context, int mark) {
+        dbHelper = new BillDbHelper(context);
+        ContentValues values = new ContentValues();
+        values.put(BillContract.addFood.COLUMN_FOOD_ID_CART, mark);
+        values.put(BillContract.addFood.COLUMN_FOOD_NAME_CART, dbHelper.getName(mark));
+//      values.put(BillContract.addFood.COLUMN_FOOD_QUANTITY_CART, 1);
+        values.put(BillContract.addFood.COLUMN_FOOD_PRICE_CART, dbHelper.getprice(mark));
+        if(!dbHelper.isExist(mark)) {
+            Uri newUri = context.getContentResolver().insert(BillContract.addFood.CONTENT_URI_CART, values);
+            if (newUri == null) {
+                Toast.makeText(context.getApplicationContext(), "Profile Cancelled", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context.getApplicationContext(), "Profile Saved", Toast.LENGTH_LONG).show();
+                addBtn.setText("ADDED");
+                addBtn.setTextColor(Color.GREEN);
+            }
+        }else{
+            Toast.makeText(context.getApplicationContext(), "Already Added", Toast.LENGTH_SHORT).show();
         }
-        cartList.setListCart(CL);
-        Log.e("new", "" + LIST);
-        addBtn.setText("ADDED");
-        addBtn.setTextColor(Color.GREEN);
     }
-
-    private void changeMarkAsAdded(int mark, Button addBtn) {
-        if (CL.contains(String.valueOf(mark))) {
-            Log.e("comparission", CL + "=" + mark);
+    private void changeMarkAsAdded(int ID, Button addBtn, Context context) {
+        dbHelper = new BillDbHelper(context);
+        ids = dbHelper.isIdExist(ID, null);
+        if (ids.contains(String.valueOf(ID))) {
             addBtn.setText("ADDED");
             addBtn.setTextColor(Color.GREEN);
-        }else{
-            addBtn.setText("ADD");
-            addBtn.setTextColor(Color.BLACK);
         }
     }
 

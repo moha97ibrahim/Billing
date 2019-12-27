@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +35,9 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_details);
 
+
         Intent getIntent = getIntent();
+        Log.e("dfkjnvidkjfncmealskdc",""+getIntent);
         mUri = getIntent.getData();
 
         editTextFoodName = findViewById(R.id.foodName);
@@ -68,15 +71,6 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
                     Toast.makeText(this, "Profile Cancelled", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, "Profile Saved", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-            } else {
-                int rowsAffected = getContentResolver().update(mUri, values, null, null);
-
-                if (rowsAffected == 0) {
-                    Toast.makeText(this, "Bill is not Updated", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Bill is Updated", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }

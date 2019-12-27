@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.billing">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,10 +32,6 @@
         <provider
             android:authorities="com.example.billing"
             android:name=".addFoodDB.BillProvider"
-            android:exported="false"/>
-        <provider
-            android:authorities="com.example.billing"
-            android:name=".cartDB.cartProvider"
             android:exported="false"/>
     </application>
 
