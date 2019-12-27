@@ -23,7 +23,7 @@ import androidx.loader.content.Loader;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
-import com.example.billing.cartDB.cartContract;
+import com.example.billing.addFoodDB.BillDbHelper;
 import com.example.billing.global.CartList;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     private CartCursorAdapter cartCursorAdapter;
     private CartList cartList;
     private String query;
+    private BillDbHelper dbHelper;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -53,16 +54,30 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cartCursorAdapter = new CartCursorAdapter(getActivity(), null);
         cartListView.setAdapter(cartCursorAdapter);
         int BILL_LOADER = 0;
-        cartList = (CartList) getActivity().getApplicationContext();
-        query = String.valueOf(cartList.getCartList());
-        String temp = "" + cartList.getListCart();
-        temp = temp.replaceFirst(",", "");
-        query = "" + temp;
-
-        Toast.makeText(getActivity(), "" + temp, Toast.LENGTH_SHORT).show();
-
-
         getActivity().getSupportLoaderManager().restartLoader(BILL_LOADER, null, this);
+
+//        TextView cToatal = getActivity().findViewById(R.id.cartTotal);
+//        dbHelper = new BillDbHelper(getContext());
+//        int cartToatal = dbHelper.getTotalSum();
+//        cToatal.setText(String.valueOf(cartToatal));
+
+
+        TextView cTotal = root.findViewById(R.id.cartTotal);
+        TextView cGST = root.findViewById(R.id.cgstView);
+        TextView sGST = root.findViewById(R.id.sgstView);
+        TextView gTotal = root.findViewById(R.id.grandTotalView);
+
+        dbHelper = new BillDbHelper(getContext());
+        double cartTotal = dbHelper.getTotalSum();
+        double CGST = cartTotal * (9.0 / 100);
+        double SGST = (9.0 / 100) * cartTotal;
+        float grandToatal = (float) (cartTotal + CGST + SGST);
+
+        cTotal.setText(String.valueOf(cartTotal));
+        cGST.setText(String.valueOf(CGST));
+        sGST.setText(String.valueOf(SGST));
+        gTotal.setText(String.valueOf(grandToatal));
+
         return root;
     }
 
@@ -72,37 +87,26 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
 
         String pro[] = {
-                cartContract.cartItem._ID,
-                cartContract.cartItem.COLUMN_FOOD_NAME,
-                cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
-                cartContract.cartItem.COLUMN_FOOD_PRICE
+                BillContract.addFood._ID_CART,
+                BillContract.addFood.COLUMN_FOOD_NAME_CART,
+                //cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
+                BillContract.addFood.COLUMN_FOOD_QUANTITY_CART,
+                BillContract.addFood.COLUMN_FOOD_PRICE_CART
         };
 
-        Log.e("on create loader 1", query);
-
-
-        String select = "((" + cartContract.cartItem._ID + " IN " + "(" + query + ")" + ") )";
-
         return new CursorLoader(getActivity(),
-                cartContract.cartItem.CONTENT_URI,
+                BillContract.addFood.CONTENT_URI_CART,
                 pro,
-                select,
+                null,
                 null,
                 null);
     }
 
 
-
-    @Override
-    public void onResume() {
-
-        onCreate(null);
-        super.onResume();
-    }
-
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         cartCursorAdapter.swapCursor(data);
+
     }
 
     @Override

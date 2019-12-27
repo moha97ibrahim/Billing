@@ -41,13 +41,12 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
     private ArrayList<Integer> cart = new ArrayList<>();
     private CartList cartList;
     private String CL;
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
     private Button addBtn;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
 
 
         menuViewModel =
@@ -78,6 +77,11 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
         } else {
             CL = "" + cartList.getListCart();
         }
+
+        //assign get intent
+        Intent getIntent = getActivity().getIntent();
+        String intentString = ""+getIntent;
+        cartList.setGetIntentMenuFra(intentString);
 
 //        CL = cartList.getListCart();
 //        if(CL != null) {
@@ -116,6 +120,8 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
 //        });
 //
 //
+
+
 
         Log.e("temp", CL);
         return root;
