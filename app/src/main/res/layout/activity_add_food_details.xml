@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.AddFoodDetailsActivity"
+    android:background="@color/colorWhite">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        >
+
+        <EditText
+            android:id="@+id/foodName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/helvetica"
+            android:hint="Food Name"
+            android:textColorHint="@color/colorBlack"
+            android:backgroundTint="@color/colorBlack"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/foodingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="top"
+            android:hint="Ingredients"
+            android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
+            android:lineSpacingExtra="8sp"
+            android:maxLines="5"
+            android:minLines="1"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:selectAllOnFocus="true"
+            android:textColorHint="@color/colorBlack"
+            android:backgroundTint="@color/colorBlack"
+            android:textSize="15sp"
+            />
+
+        <EditText
+            android:id="@+id/foodPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/helvetica"
+            android:layout_marginBottom="10dp"
+            android:hint="Price"
+            android:inputType="number"
+            android:textColorHint="@color/colorBlack"
+            android:backgroundTint="@color/colorBlack"
+            android:textSize="15sp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:gravity="bottom">
+
+        <Button
+            android:id="@+id/addFoodButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorGrey"
+            android:fontFamily="@font/helvetica"
+            android:text="ADD" />
+    </LinearLayout>
+
+</LinearLayout>
