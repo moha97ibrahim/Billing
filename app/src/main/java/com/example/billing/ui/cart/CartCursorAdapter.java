@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentManager;
+
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
@@ -26,6 +28,7 @@ public class CartCursorAdapter extends CursorAdapter {
     private CartList cartList;
     private String CL;
     private BillDbHelper dbHelper;
+    private CartFragment cartFragment;
 
     public CartCursorAdapter(Context context, Cursor c) {
         super(context, c, 0);
@@ -78,6 +81,7 @@ public class CartCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 incrementQuntity(quantity, mark, context);
+
             }
         });
 
@@ -96,6 +100,10 @@ public class CartCursorAdapter extends CursorAdapter {
                 removeFood(v, context);
             }
         });
+
+
+
+
 
     }
 

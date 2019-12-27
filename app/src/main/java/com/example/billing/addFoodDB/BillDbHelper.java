@@ -3,7 +3,6 @@ package com.example.billing.addFoodDB;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -113,15 +112,43 @@ public class BillDbHelper extends SQLiteOpenHelper {
         SQLiteDatabase database = getReadableDatabase();
         String query = "SELECT * FROM cart WHERE " + BillContract.addFood.COLUMN_FOOD_ID_CART + "=" + id;
         Cursor get = database.rawQuery(query, null);
-
-
         if (get.getCount() > 0) {
             get.moveToFirst();
             return true;
         } else {
             return false;
         }
+    }
 
+    public int getTotalSum() {
+        int total = 0;
+        ArrayList<String> quntity = new ArrayList<>();
+        ArrayList<String> price = new ArrayList<>();
+        SQLiteDatabase database;
+        String queryQuntity = " SELECT * FROM cart ";
+        String queryPrice = " SELECT * FROM cart ";
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(queryQuntity, null);
+        get.moveToFirst();
+        while (!get.isAfterLast()) {
+            quntity.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_FOOD_QUANTITY_CART)));
+            get.moveToNext();
+        }
+        Cursor get1 = database.rawQuery(queryPrice, null);
+        get1.moveToFirst();
+        while (!get1.isAfterLast()) {
+            price.add(get1.getString(get1.getColumnIndex(BillContract.addFood.COLUMN_FOOD_PRICE_CART)));
+            get1.moveToNext();
+        }
+
+        int q,p;
+        for (int i = 0;i<quntity.size();i++){
+            q= Integer.parseInt(quntity.get(i));
+            p= Integer.parseInt(price.get(i));
+            total = total+(q*p);
+        }
+
+        return total;
     }
 
 
