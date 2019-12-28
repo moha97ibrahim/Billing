@@ -61,10 +61,7 @@ public class MenuCursorAdapter extends CursorAdapter {
         final TextView name = view.findViewById(R.id.menuFoodNameView);
         final TextView price = view.findViewById(R.id.menuFoodPriceView);
         TextView ingredient = view.findViewById(R.id.menuFoodIngredientsView);
-
-
         final Button addBtn = view.findViewById(R.id.addBtn);
-
         int nameColumnIndex = cursor.getColumnIndex(BillContract.addFood.COLUMN_FOOD_NAME);
         int ID = cursor.getColumnIndex(BillContract.addFood._ID);
         int priceColumnIndex = cursor.getColumnIndex(BillContract.addFood.COLUMN_FOOD_PRICE);
@@ -92,15 +89,14 @@ public class MenuCursorAdapter extends CursorAdapter {
         dbHelper = new BillDbHelper(context);
         ContentValues values = new ContentValues();
         values.put(BillContract.addFood.COLUMN_FOOD_ID_CART, mark);
-        values.put(BillContract.addFood.COLUMN_FOOD_NAME_CART, dbHelper.getName(mark));
-//      values.put(BillContract.addFood.COLUMN_FOOD_QUANTITY_CART, 1);
+        values.put(BillContract.addFood.COLUMN_FOOD_NAME_CART, dbHelper.getName(mark));;
         values.put(BillContract.addFood.COLUMN_FOOD_PRICE_CART, dbHelper.getprice(mark));
         if(!dbHelper.isExist(mark)) {
             Uri newUri = context.getContentResolver().insert(BillContract.addFood.CONTENT_URI_CART, values);
             if (newUri == null) {
                 Toast.makeText(context.getApplicationContext(), "Profile Cancelled", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(context.getApplicationContext(), "Profile Saved", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context.getApplicationContext(), "Profile Saved", Toast.LENGTH_LONG).show();
                 addBtn.setText("ADDED");
                 addBtn.setTextColor(Color.GREEN);
             }

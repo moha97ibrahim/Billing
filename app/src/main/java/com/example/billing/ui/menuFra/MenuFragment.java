@@ -38,9 +38,6 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
     private ListView menuFoodListView;
     MenuCursorAdapter menuCursorAdapter;
     private final int CART_LOADER = 1;
-    private ArrayList<Integer> cart = new ArrayList<>();
-    private CartList cartList;
-    private String CL;
     private Button addBtn;
 
 
@@ -60,8 +57,6 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         });
 
-        Toast.makeText(getActivity(), "" + cart, Toast.LENGTH_SHORT).show();
-
         //list view
         menuFoodListView = root.findViewById(R.id.menuFoodListView);
         addBtn = root.findViewById(R.id.addBtn);
@@ -69,61 +64,6 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
         menuCursorAdapter = new MenuCursorAdapter(getActivity(), null);
         menuFoodListView.setAdapter(menuCursorAdapter);
         getActivity().getSupportLoaderManager().initLoader(CART_LOADER, null, this);
-
-        //cart
-        cartList = (CartList) getActivity().getApplicationContext();
-        if (cartList.getListCart() == null) {
-            CL = "";
-        } else {
-            CL = "" + cartList.getListCart();
-        }
-
-        //assign get intent
-        Intent getIntent = getActivity().getIntent();
-        String intentString = ""+getIntent;
-        cartList.setGetIntentMenuFra(intentString);
-
-//        CL = cartList.getListCart();
-//        if(CL != null) {
-//            String a[] = CL.split(",");
-//
-
-
-        //adding to cart
-//        menuFoodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Button button = view.findViewById(R.id.addBtn);
-//                button.setText("ADDED");
-
-//                if (cart.contains((int) id)) {
-//                    Log.e("notadded", (id) + "" + cart);
-//                    Toast.makeText(getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    cart.add((int) id);
-//                    Log.e("added", String.valueOf(id));
-//                    cartList.setCartList(cart);
-//                    Toast.makeText(getActivity(), "" + cart, Toast.LENGTH_SHORT).show();
-//                }
-//
-//                if(CL.contains(String.valueOf(id))){
-//                    Log.e("temp",CL);
-//                    Toast.makeText(getActivity(), "Already Added", Toast.LENGTH_SHORT).show();
-//                }
-//                else{
-//                   CL=CL+","+id;
-//                    Log.e("temp",CL);
-//                }
-//                cartList.setListCart(CL);
-//            }
-//        });
-//
-//
-
-
-
-        Log.e("temp", CL);
         return root;
     }
 

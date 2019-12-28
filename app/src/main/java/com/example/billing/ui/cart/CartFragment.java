@@ -94,11 +94,11 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         try {
             Log.e("run","run");
             dbHelper = new BillDbHelper(getContext());
-            float cartTotal = dbHelper.getTotalSum();
+            float cartTotal = dbHelper.getTotalSum() ;
             float CGST = (float) (cartTotal * (9.0 / 100));
             float SGST = (float) ((9.0 / 100) * cartTotal);
-            grandToatal = cartTotal + CGST + SGST;
-
+            grandToatal = cartTotal;
+            cartTotal = cartTotal - CGST - SGST;
             cTotal.setText(precision.format(cartTotal));
             cGST.setText(precision.format(CGST));
             sGST.setText(precision.format(SGST));
