@@ -1,7 +1,12 @@
 package com.example.billing;
 
+import android.app.Notification;
 import android.os.Bundle;
+import android.os.Handler;
 
+import com.example.billing.addFoodDB.BillDbHelper;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +15,19 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
+
+
+    private BillDbHelper dbHelper;
+    private BottomNavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -25,6 +36,40 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+
+
+
+        updateBadge();
+
+    }
+
+    private void updateBadge() {
+        if(getItemCount()>0) {
+            navView.showBadge(R.id.navigation_cart).setNumber(getItemCount());
+        }
+        else {
+            navView.removeBadge(R.id.navigation_cart);
+        }
+        refresh();
+    }
+
+    private void refresh() {
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                updateBadge();
+            }
+        };
+
+        handler.postDelayed(runnable,1000);
+    }
+
+    private int getItemCount() {
+        dbHelper = new BillDbHelper(getApplicationContext());
+        int count = dbHelper.getCount();
+        return count;
     }
 
 }

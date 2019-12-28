@@ -114,6 +114,9 @@ public class MenuCursorAdapter extends CursorAdapter {
         if (ids.contains(String.valueOf(ID))) {
             addBtn.setText("ADDED");
             addBtn.setTextColor(Color.GREEN);
+        }else{
+            addBtn.setText("ADD");
+            addBtn.setTextColor(Color.BLACK);
         }
     }
 
