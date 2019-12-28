@@ -167,4 +167,26 @@ public class BillDbHelper extends SQLiteOpenHelper {
         return count;
 
     }
+
+
+    public ArrayList<ArrayList<String>> getCart(){
+        ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
+        ArrayList<String> arrayList2 = new ArrayList<>();
+        SQLiteDatabase database;
+        String query = " SELECT * FROM cart";
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(query, null);
+        get.moveToFirst();
+        while (get.isAfterLast() == false) {
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_FOOD_NAME_CART)));
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_FOOD_QUANTITY_CART)));
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_FOOD_PRICE_CART)));
+            arrayList1.add(arrayList2);
+            arrayList2 = new ArrayList<>();
+            get.moveToNext();
+        }
+
+
+        return arrayList1;
+    }
 }

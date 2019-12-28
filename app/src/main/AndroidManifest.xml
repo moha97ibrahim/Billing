@@ -33,6 +33,18 @@
             android:authorities="com.example.billing"
             android:name=".addFoodDB.BillProvider"
             android:exported="false"/>
+        
+        <provider
+            android:authorities="com.example.billing.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            android:name="androidx.core.content.FileProvider">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+
+        </provider>
+        
     </application>
 
 </manifest>
