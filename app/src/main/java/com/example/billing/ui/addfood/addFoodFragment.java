@@ -52,7 +52,7 @@ public class addFoodFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.e("click","1");
-                Toast.makeText(getActivity(),String.valueOf(id),Toast.LENGTH_SHORT).show();
+             //   Toast.makeText(getActivity(),String.valueOf(id),Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -152,4 +152,19 @@ public class BillDbHelper extends SQLiteOpenHelper {
     }
 
 
+    public int getCount() {
+        SQLiteDatabase database;
+        String query = " SELECT * FROM cart";
+        ArrayList<String> arrayList = new ArrayList<>();
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(query, null);
+        get.moveToFirst();
+        while (get.isAfterLast() == false) {
+            arrayList.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_FOOD_ID_CART)));
+            get.moveToNext();
+        }
+        int count = arrayList.size();
+        return count;
+
+    }
 }

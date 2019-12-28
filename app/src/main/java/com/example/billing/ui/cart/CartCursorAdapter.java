@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.billing.R;
@@ -45,7 +46,6 @@ public class CartCursorAdapter extends CursorAdapter {
 
         TextView name = view.findViewById(R.id.cartFoodNameView);
         TextView price = view.findViewById(R.id.cartFoodPriceView);
-        //TextView ingredient = view.findViewById(R.id.cartFoodIngredientsView);
         final TextView quantity = view.findViewById(R.id.cartFoodQantityView);
         ImageButton increment = view.findViewById(R.id.imageButtonIncrement);
         ImageButton decrement = view.findViewById(R.id.imageButtonDecrement);
@@ -71,7 +71,6 @@ public class CartCursorAdapter extends CursorAdapter {
         name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context.getApplicationContext(), "" + mark, Toast.LENGTH_SHORT).show();
             }
         });
 
