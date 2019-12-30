@@ -2,7 +2,7 @@ package com.example.billing.ui.cart;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,11 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -27,11 +25,11 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
-
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
 import com.example.billing.global.CartList;
+import com.example.billing.printingActivity;
 import com.example.billing.utills.Common;
 import com.example.billing.utills.PdfDocumentAdapter;
 import com.itextpdf.text.BaseColor;
@@ -46,14 +44,12 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
-import com.itextpdf.text.pdf.interfaces.PdfDocumentActions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -64,8 +60,6 @@ import java.util.ArrayList;
 public class CartFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private CartCursorAdapter cartCursorAdapter;
-    private CartList cartList;
-    private String query;
     private BillDbHelper dbHelper;
     private TextView gTotal, sGST, cGST, cTotal;
     private float grandToatal;
@@ -82,7 +76,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cGST = root.findViewById(R.id.cgstView);
         sGST = root.findViewById(R.id.sgstView);
         gTotal = root.findViewById(R.id.grandTotalView);
-        cardViewtot = root.findViewById(R.id.cardViewTotal);
+//        cardViewtot = root.findViewById(R.id.cardViewTotal);
         cartViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -104,7 +98,9 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         submitCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
+                Intent i = new Intent(getActivity(), printingActivity.class);
+                startActivity(i);
+              //  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
             }
         });
 
@@ -287,7 +283,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onResume() {
-        updateValue();
+       // updateValue();
         super.onResume();
 
     }

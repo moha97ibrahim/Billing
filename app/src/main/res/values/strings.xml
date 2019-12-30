@@ -3,4 +3,5 @@
     <string name="title_additem">Add Food</string>
     <string name="title_foodmenu">Menu</string>
     <string name="title_cart">Cart</string>
+    <string name="total">Total</string>
 </resources>
