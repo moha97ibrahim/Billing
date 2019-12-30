@@ -6,10 +6,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -20,6 +22,8 @@ import java.util.UUID;
 
 import android.os.Handler;
 
+import com.example.billing.addFoodDB.BillDbHelper;
+
 import java.util.logging.LogRecord;
 
 public class printingActivity extends AppCompatActivity {
@@ -27,6 +31,7 @@ public class printingActivity extends AppCompatActivity {
     EditText printText;
     Button buttonprint, buttonDisconnect, buttonConnect;
     TextView printerName, printterAttach;
+    Switch bluetoothControl;
 
 
     BluetoothAdapter bluetoothAdapter;
@@ -42,54 +47,90 @@ public class printingActivity extends AppCompatActivity {
     int readBufferPosition;
     volatile boolean stopWorker;
 
+    BillDbHelper dbHelper;
+    String BLUETOOTH_SETTING = "BLUETOOTH_CONNECTION_STATUS";
+    SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_printing);
-
+        dbHelper = new BillDbHelper(getApplicationContext());
+        sharedPreferences = getSharedPreferences("SETTING", MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
         printerName = findViewById(R.id.lblPrinterName);
-        printterAttach = findViewById(R.id.lbl);
-        printText = findViewById(R.id.printText);
         buttonprint = findViewById(R.id.btnPrint);
-        buttonConnect = findViewById(R.id.btnConnect);
-        buttonDisconnect = findViewById(R.id.btnDisconnect);
+        bluetoothControl = findViewById(R.id.bluetoothSwitch);
 
-        buttonConnect.setOnClickListener(new View.OnClickListener() {
+        if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null) == "1")
+            bluetoothControl.setChecked(true);
+        else
+            bluetoothControl.setChecked(false);
+
+
+        bluetoothControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    FindBluetoothDevice();
-                    openBlueToothPrinter();
-                }
-                catch (Exception ex){
-                    ex.printStackTrace();
+                if (bluetoothControl.isChecked()) {
+                    try {
+                        FindBluetoothDevice();
+                        openBlueToothPrinter();
+                        editor.putString("BLUETOOTH_CONNECTION_STATUS", "1");
+                        editor.apply();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    try {
+                        printerName.setText("No Device Found");
+                        disconnectPrint();
+                        editor.putString("BLUETOOTH_CONNECTION_STATUS", "0");
+                        editor.apply();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });
 
-        buttonDisconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                   disconnectPrint();
-                }
-                catch (Exception ex){
-                    ex.printStackTrace();
-                }
-            }
-        });
+//
+//        buttonConnect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try{
+//                    FindBluetoothDevice();
+//                    openBlueToothPrinter();
+//                }
+//                catch (Exception ex){
+//                    ex.printStackTrace();
+//                }
+//            }
+//        });
+
+
+//        buttonDisconnect.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                try{
+//                   disconnectPrint();
+//                }
+//                catch (Exception ex){
+//                    ex.printStackTrace();
+//                }
+//            }
+//        });
         buttonprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     printData();
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
     }
+
 
     void FindBluetoothDevice() {
         try {
@@ -105,17 +146,16 @@ public class printingActivity extends AppCompatActivity {
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
-                    if (pairedDev.getName().equals("OPPO A3s")) {   //yet to set
+                    if (pairedDev.getName().equals("Moto E (4) Plus")) {   //yet to set
                         bluetoothDevice = pairedDev;
-                        printerName.setText("printer attached" + pairedDev.getName());
+                        printerName.setText("" + pairedDev.getName());
                         break;
 
-                    }else{
+                    } else {
                         printerName.setText("not paired" + pairedDev.getName());
                     }
                 }
             }
-
 
 
         } catch (Exception ex) {
@@ -152,34 +192,34 @@ public class printingActivity extends AppCompatActivity {
                     while (!Thread.currentThread().isInterrupted() && !stopWorker) {
                         try {
                             int byteAvailable = inputStream.available();
-                            if (byteAvailable>0){
+                            if (byteAvailable > 0) {
                                 byte[] packetByte = new byte[byteAvailable];
                                 inputStream.read(packetByte);
-                                for(int i = 0 ;i<byteAvailable;i++){
+                                for (int i = 0; i < byteAvailable; i++) {
                                     byte b = packetByte[i];
-                                    if(b==delimeter){
+                                    if (b == delimeter) {
                                         byte[] encodedByte = new byte[readBufferPosition];
                                         System.arraycopy(
-                                                readBuffer,0,
-                                                encodedByte,0,
+                                                readBuffer, 0,
+                                                encodedByte, 0,
                                                 encodedByte.length
                                         );
-                                        final String data = new String(encodedByte,"US-ASCII");
-                                        readBufferPosition=0;
+                                        final String data = new String(encodedByte, "US-ASCII");
+                                        readBufferPosition = 0;
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
                                                 printerName.setText(data);
                                             }
                                         });
-                                    }else{
-                                        readBuffer[readBufferPosition++]=b;
+                                    } else {
+                                        readBuffer[readBufferPosition++] = b;
                                     }
                                 }
 
                             }
                         } catch (Exception ex) {
-                            stopWorker=true;
+                            stopWorker = true;
                         }
                     }
                 }
@@ -191,25 +231,25 @@ public class printingActivity extends AppCompatActivity {
         }
     }
 
-    void printData() throws IOException{
-        try{
+    void printData() throws IOException {
+        try {
             String message = "yeppa print aairuchu";
-            message+="\n";
+            message += "\n";
             outputStream.write(message.getBytes());
             printerName.setText("printing......");
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    void disconnectPrint() throws IOException{
-        try{
-          stopWorker = true;
-          outputStream.close();
-          inputStream.close();
-          bluetoothSocket.close();
-          printerName.setText("printer disconnected");
-        }catch (Exception ex){
+    void disconnectPrint() throws IOException {
+        try {
+            stopWorker = true;
+            outputStream.close();
+            inputStream.close();
+            bluetoothSocket.close();
+            printerName.setText("printer disconnected");
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }

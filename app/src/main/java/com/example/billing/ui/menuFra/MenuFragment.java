@@ -26,7 +26,7 @@ import androidx.loader.content.Loader;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
-import com.example.billing.global.CartList;
+
 
 import java.util.ArrayList;
 

@@ -23,6 +23,10 @@ public class BillProvider extends ContentProvider {
 
     private static final int CART_ID = 2001;
 
+    private static final int SETTING = 3000;
+
+    private static final int SETTING_ID = 3001;
+
     private static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
@@ -31,6 +35,9 @@ public class BillProvider extends ContentProvider {
 
         mUriMatcher.addURI(BillContract.CONTENT_AUTHORITY, BillContract.PATH_PRODUCT_CART, CART);
         mUriMatcher.addURI(BillContract.CONTENT_AUTHORITY, BillContract.PATH_PRODUCT_CART + "/#", CART_ID);
+
+        mUriMatcher.addURI(BillContract.CONTENT_AUTHORITY, BillContract.PATH_PRODUCT_SETTING, SETTING);
+        mUriMatcher.addURI(BillContract.CONTENT_AUTHORITY, BillContract.PATH_PRODUCT_SETTING + "/#", SETTING_ID);
     }
 
 
@@ -88,6 +95,24 @@ public class BillProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
+
+            case SETTING:
+                cursor = db.query(BillContract.addFood.TABLE_NAME_SETTING,
+                        projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case SETTING_ID:
+                selection = BillContract.addFood._ID_SETTING + "=?";
+                selectionArgs = new String[]{
+                        String.valueOf(ContentUris.parseId(uri))
+                };
+                cursor = db.query(BillContract.addFood.TABLE_NAME_SETTING,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
             default:
                 throw new IllegalArgumentException("Cannot query Unknown Uri " + getType(uri));
         }
@@ -110,6 +135,10 @@ public class BillProvider extends ContentProvider {
                 return BillContract.addFood.CONTENT_LIST_TYPE_CART;
             case CART_ID:
                 return BillContract.addFood.CONTENT_ITEM_TYPE_CART;
+            case SETTING:
+                return BillContract.addFood.CONTENT_LIST_TYPE_SETTING;
+            case SETTING_ID:
+                return BillContract.addFood.CONTENT_ITEM_TYPE_SETTING;
             default:
                 throw new IllegalArgumentException("Unknown URI : " + uri + " with match" + match);
         }
@@ -125,10 +154,33 @@ public class BillProvider extends ContentProvider {
                 return insertData(uri, contentValues);
             case CART:
                 return insertData_cart(uri,contentValues);
+            case SETTING:
+                return insertData_setting(uri,contentValues);
             default:
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
 
+    }
+
+    private Uri insertData_setting(Uri uri, ContentValues contentValues) {
+        String name = contentValues.getAsString(BillContract.addFood.COLUMN_SETTING_NAME);
+
+        if (name == null) {
+            throw new IllegalArgumentException("Setting requires name");
+        }
+
+        SQLiteDatabase db = billDbHelper.getWritableDatabase();
+
+        long rowsInserted = db.insert(BillContract.addFood.TABLE_NAME_SETTING, null, contentValues);
+
+        if (rowsInserted == -1) {
+            Log.e(LOG_TAG, "Failed to insert row for " + uri);
+            return null;
+        }
+
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return ContentUris.withAppendedId(uri, rowsInserted);
     }
 
     private Uri insertData_cart(Uri uri, ContentValues contentValues) {
@@ -201,8 +253,18 @@ public class BillProvider extends ContentProvider {
                 };
                 rowsDeleted = db.delete(BillContract.addFood.TABLE_NAME_CART, selection, selectionArgs);
                 break;
+            case SETTING:
+                rowsDeleted = db.delete(BillContract.addFood.TABLE_NAME_SETTING, null, null);
+                break;
+            case SETTING_ID:
+                selection = BillContract.addFood._ID_SETTING + "=?";
+                selectionArgs = new String[]{
+                        String.valueOf(ContentUris.parseId(uri))
+                };
+                rowsDeleted = db.delete(BillContract.addFood.TABLE_NAME_SETTING, selection, selectionArgs);
+                break;
             default:
-                throw new IllegalArgumentException("Deletion Error for Uri:" + uri);
+                throw new IllegalArgumentException("Setting Error for Uri:" + uri);
         }
 
         if (rowsDeleted != 0) {
@@ -233,9 +295,32 @@ public class BillProvider extends ContentProvider {
                         String.valueOf(ContentUris.parseId(uri))
                 };
                 return updateCart(uri, contentValues, selection, selectionArgs);
+            case SETTING:
+                return updateSetting(uri, contentValues, selection, selectionArgs);
+            case SETTING_ID:
+                selection = BillContract.addFood._ID_SETTING + "=?";
+                selectionArgs = new String[]{
+                        String.valueOf(ContentUris.parseId(uri))
+                };
+                return updateSetting(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is not supported for" + uri);
         }
+    }
+
+    private int updateSetting(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
+        if (contentValues.size() == 0) {
+            return 0;
+        }
+
+        SQLiteDatabase db = billDbHelper.getWritableDatabase();
+
+        int rowsUpdated = db.update(BillContract.addFood.TABLE_NAME_SETTING, contentValues, selection, selectionArgs);
+
+        if (rowsUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsUpdated;
     }
 
     private int updateCart(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {

@@ -21,12 +21,10 @@ import androidx.fragment.app.FragmentManager;
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.global.CartList;
 
 public class CartCursorAdapter extends CursorAdapter {
 
     private int QUANTITY = 1;
-    private CartList cartList;
     private String CL;
     private BillDbHelper dbHelper;
     private CartFragment cartFragment;

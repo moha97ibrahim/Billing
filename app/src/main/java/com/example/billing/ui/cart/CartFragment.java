@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -25,10 +26,10 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
+
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.global.CartList;
 import com.example.billing.printingActivity;
 import com.example.billing.utills.Common;
 import com.example.billing.utills.PdfDocumentAdapter;
@@ -50,6 +51,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -100,7 +102,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), printingActivity.class);
                 startActivity(i);
-              //  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
+   //               createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
             }
         });
 
@@ -208,7 +210,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             for (int i = 0; i < arrayList1.size(); i++) {
                 arrayList2 = arrayList1.get(i);
                 addNewItemWithLeftAndRight(document, arrayList2.get(0), arrayList2.get(1) + " * " + arrayList2.get(2), titlefont, orderNumberValueFont);
-                addNewItemWithLeftAndRight(document, arrayList2.get(1) + " * " + arrayList2.get(2), String.valueOf(Integer.parseInt(arrayList2.get(1))*Integer.parseInt(arrayList2.get(2))), titlefont, orderNumberValueFont);
+                addNewItemWithLeftAndRight(document, arrayList2.get(1) + " * " + arrayList2.get(2), String.valueOf(Integer.parseInt(arrayList2.get(1)) * Integer.parseInt(arrayList2.get(2))), titlefont, orderNumberValueFont);
                 addLineSeparator(document);
             }
             addLineSpace(document);
@@ -283,7 +285,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onResume() {
-       // updateValue();
+        updateValue();
         super.onResume();
 
     }
@@ -329,7 +331,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         String pro[] = {
                 BillContract.addFood._ID_CART,
                 BillContract.addFood.COLUMN_FOOD_NAME_CART,
-                //cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
                 BillContract.addFood.COLUMN_FOOD_QUANTITY_CART,
                 BillContract.addFood.COLUMN_FOOD_PRICE_CART
         };

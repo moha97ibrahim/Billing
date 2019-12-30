@@ -9,30 +9,35 @@ public class BillContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.billing";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static final String PATH_PRODUCT = "food";
 
+    public static final String PATH_PRODUCT = "food";
     public static final String PATH_PRODUCT_CART = "cart";
+    public static final String PATH_PRODUCT_SETTING = "setting";
 
     public static final class addFood implements BaseColumns{
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT);
-
         public static final Uri CONTENT_URI_CART = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT_CART);
+        public static final Uri CONTENT_URI_SETTING = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT_SETTING);
 
 
 
         public static final String CONTENT_LIST_TYPE =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT;
-
         public static final String CONTENT_LIST_TYPE_CART =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_CART;
+        public static final String CONTENT_LIST_TYPE_SETTING =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_SETTING;
+
 
 
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT;
-
         public static final String CONTENT_ITEM_TYPE_CART =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_CART;
+        public static final String CONTENT_ITEM_TYPE_SETTING =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_SETTING;
+
 
 
         public final static String TABLE_NAME = "food";
@@ -58,6 +63,15 @@ public class BillContract {
         public final static String COLUMN_FOOD_QUANTITY_CART = "food_quantity";
 
         public final static String COLUMN_FOOD_PRICE_CART = "food_price";
+
+
+        public final static String TABLE_NAME_SETTING = "setting";
+
+        public final static String _ID_SETTING = BaseColumns._ID;
+
+        public final static String COLUMN_SETTING_NAME = "setting_name";
+
+        public final static String COLUMN_SETTING_VALUE = "setting_value";
 
 
     }
