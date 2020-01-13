@@ -1,6 +1,7 @@
 package com.example.billing.ui.cart;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -65,19 +66,19 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     private BillDbHelper dbHelper;
     private TextView gTotal, sGST, cGST, cTotal;
     private float grandToatal;
-    private CardView cardViewtot, submitCard;
+    private CardView cardViewtot, submitCard , clearCard;
+    private  ProgressDialog progressDoalog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         CartViewModel cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_cart, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         cTotal = root.findViewById(R.id.cartTotal);
-        cGST = root.findViewById(R.id.cgstView);
-        sGST = root.findViewById(R.id.sgstView);
-        gTotal = root.findViewById(R.id.grandTotalView);
+//        cGST = root.findViewById(R.id.cgstView);
+//        sGST = root.findViewById(R.id.sgstView);
+//        gTotal = root.findViewById(R.id.grandTotalView);
 //        cardViewtot = root.findViewById(R.id.cardViewTotal);
         cartViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -101,10 +102,15 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), printingActivity.class);
+                i.putExtra("total",grandToatal);
                 startActivity(i);
-   //               createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
+                progressDoalog = new ProgressDialog(getActivity());
+                progressDoalog.setMessage("Loading.....");
+                progressDoalog.show();
+//                  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
             }
         });
+
 
 
         Dexter.withActivity(getActivity())
@@ -357,5 +363,16 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cartCursorAdapter.swapCursor(null);
 
 
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            progressDoalog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

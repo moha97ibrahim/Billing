@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,6 +53,10 @@ public class printingActivity extends AppCompatActivity {
     String BLUETOOTH_SETTING = "BLUETOOTH_CONNECTION_STATUS";
     SharedPreferences sharedPreferences;
 
+    ArrayList<String> dataLine1= new ArrayList<>();
+    ArrayList<String> dataLine2= new ArrayList<>();
+    int TOTALWORD = 30;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +68,15 @@ public class printingActivity extends AppCompatActivity {
         buttonprint = findViewById(R.id.btnPrint);
         bluetoothControl = findViewById(R.id.bluetoothSwitch);
 
-        if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null) == "1")
+        if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null).equals("1")) {
             bluetoothControl.setChecked(true);
+            FindBluetoothDevice();
+            try {
+                openBlueToothPrinter();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         else
             bluetoothControl.setChecked(false);
 
@@ -124,6 +137,10 @@ public class printingActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     printData();
+                    BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
+                    dbHelper.truncate();
+                    finish();
+
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -146,7 +163,7 @@ public class printingActivity extends AppCompatActivity {
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
-                    if (pairedDev.getName().equals("Moto E (4) Plus")) {   //yet to set
+                    if (pairedDev.getName().equals("BlueTooth Printer")) {   //yet to set
                         bluetoothDevice = pairedDev;
                         printerName.setText("" + pairedDev.getName());
                         break;
@@ -233,13 +250,38 @@ public class printingActivity extends AppCompatActivity {
 
     void printData() throws IOException {
         try {
-            String message = "yeppa print aairuchu";
-            message += "\n";
+            arrangeData();
+            String message = getMessage();
+           //message += "\n";
             outputStream.write(message.getBytes());
-            printerName.setText("printing......");
+            //printerName.setText("printing......");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String getMessage() {
+        dbHelper = new BillDbHelper(getApplicationContext());
+        float cartTotal = dbHelper.getTotalSum();
+        String  Title = "           Mr.Frozen          "+"\n"+
+                        " 247,Vasandha Road,Dharapuram "+"\n"+
+                        "          Order Detail        ";
+        String  footer= "------------------------------"+"\n"+
+                        "Total                   "+cartTotal+"\n"+
+                        "------------------------------"+"\n"+
+                        "      Thankyou visit again    ";
+        String message = "";
+
+        for (int i = 0; i < dataLine1.size(); i++) {
+            message = message+dataLine1.get(i)+"\n"+
+                    dataLine2.get(i)+"\n";
+        }
+
+        String message1 = Title+"\n"+
+                  message+"\n"+
+                footer;
+        Log.e("messge","\n"+message1);
+        return message1 ;
     }
 
     void disconnectPrint() throws IOException {
@@ -252,6 +294,35 @@ public class printingActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+    private String arrangeData(){
+        String message = "";
+        BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
+        ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
+        ArrayList<String> arrayList2 = new ArrayList<>();
+        arrayList1 = dbHelper.getCart();
+        for (int i = 0; i < arrayList1.size(); i++) {
+            arrayList2 = arrayList1.get(i);
+            String foodName = arrayList2.get(0);
+            String qunatity = arrayList2.get(1);
+            String price = arrayList2.get(2);
+            int totalCountLine1 = foodName.length() + qunatity.length() + 1;
+            int totalCountLine2 = price.length() + (String.valueOf(Integer.parseInt(qunatity)*Integer.parseInt(price))).length();
+            int space1 = TOTALWORD - totalCountLine1;
+            int space2 = TOTALWORD - totalCountLine2;
+            dataLine1.add(""+foodName+getSpace(space1)+qunatity+"*");
+            dataLine2.add(""+price+getSpace(space2)+ Integer.parseInt(qunatity) * Integer.parseInt(price));
+        }
+        return message;
+    }
+
+    private String getSpace(int space) {
+        String spaces = "";
+        for(int i=0;i<space;i++){
+            spaces =  spaces + " ";
+        }
+        return spaces;
     }
 
 }

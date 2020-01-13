@@ -238,5 +238,13 @@ public class BillDbHelper extends SQLiteOpenHelper {
     }
 
     //=======================================================================CUSTOM_SETTING=============================================================
+
+    public void truncate(){
+        SQLiteDatabase database;
+        String query = "DELETE FROM "+ BillContract.addFood.TABLE_NAME_CART + " WHERE " + BillContract.addFood._ID_CART+ " > 0 " ;
+        database = getWritableDatabase();
+        database.execSQL(query);
+    }
+
 }
 

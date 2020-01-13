@@ -39,4 +39,12 @@ dependencies {
     //pdf
     implementation "com.itextpdf:itextg:5.5.10"
     implementation "com.karumi:dexter:5.0.0"
+
+
+    //google ad mob
+    implementation 'com.google.android.gms:play-services-ads:18.3.0'
+    implementation 'com.google.firebase:firebase-ads:18.3.0'
+
+    implementation 'com.google.firebase:firebase-analytics:17.2.1'
 }
+apply plugin: 'com.google.gms.google-services'
