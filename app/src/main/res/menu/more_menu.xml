@@ -9,10 +9,10 @@
         app:showAsAction="never"
         />
 
-    <item
-        android:id="@+id/data"
-        android:title="Data"
-        app:showAsAction="never" />
+<!--    <item-->
+<!--        android:id="@+id/data"-->
+<!--        android:title="Data"-->
+<!--        app:showAsAction="never" />-->
 
     <item
         android:id="@+id/setting"

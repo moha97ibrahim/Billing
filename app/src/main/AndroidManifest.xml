@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".SettingActivity"></activity>
+        <activity android:name=".ui.insight.InsightActivity"></activity>
+        <activity android:name=".SettingActivity" />
         <activity
             android:name=".SplashScreen"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -33,7 +34,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name=".addFoodDB.BillProvider"

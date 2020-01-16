@@ -86,8 +86,7 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
                 BillContract.addFood.CONTENT_URI,
                 projection,
                 null,
-                null,
-                null);
+                null, BillContract.addFood.COLUMN_FOOD_NAME +" ASC ");
 
         return s;
     }

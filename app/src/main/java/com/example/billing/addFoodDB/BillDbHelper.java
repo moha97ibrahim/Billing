@@ -5,13 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class BillDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "foodlist.db";
@@ -22,6 +19,7 @@ public class BillDbHelper extends SQLiteOpenHelper {
     public BillDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
@@ -46,6 +44,14 @@ public class BillDbHelper extends SQLiteOpenHelper {
                 + BillContract.addFood.COLUMN_SETTING_NAME + " TEXT,"
                 + BillContract.addFood.COLUMN_SETTING_VALUE + " TEXT);";
 
+        //setting table
+        String SQL_CREATE_DATA_TABLE = "CREATE TABLE " + BillContract.addFood.TABLE_NAME_DATA + "("
+                + BillContract.addFood._ID_DATA + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + BillContract.addFood.COLUMN_DATA_ORDER_DATE + " TEXT,"
+                + BillContract.addFood.COLUMN_DATA_ORDER_MONTH + " TEXT,"
+                + BillContract.addFood.COLUMN_DATA_ORDER_YEAR + " TEXT,"
+                + BillContract.addFood.COLUMN_DATA_ORDER_VALUE + " TEXT);";
+
         String SQL_INSERT_VALUES = "INSERT INTO " + BillContract.addFood.TABLE_NAME_SETTING + "("
                 + BillContract.addFood.COLUMN_SETTING_NAME + " , " + BillContract.addFood.COLUMN_SETTING_VALUE + ") VALUES ( 'BLUETOOTH_CONNECTION_STATUS','0' );";
 
@@ -54,7 +60,8 @@ public class BillDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_CARTLIST_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_SETTING_TABLE);
         sqLiteDatabase.execSQL(SQL_INSERT_VALUES);
-    //    getCustomSettingValue(sqLiteDatabase);
+        sqLiteDatabase.execSQL(SQL_CREATE_DATA_TABLE);
+        //    getCustomSettingValue(sqLiteDatabase);
     }
 
 
@@ -239,11 +246,82 @@ public class BillDbHelper extends SQLiteOpenHelper {
 
     //=======================================================================CUSTOM_SETTING=============================================================
 
-    public void truncate(){
+    public void truncate() {
         SQLiteDatabase database;
-        String query = "DELETE FROM "+ BillContract.addFood.TABLE_NAME_CART + " WHERE " + BillContract.addFood._ID_CART+ " > 0 " ;
+        String query = "DELETE FROM " + BillContract.addFood.TABLE_NAME_CART + " WHERE " + BillContract.addFood._ID_CART + " > 0 ";
         database = getWritableDatabase();
         database.execSQL(query);
+    }
+
+    //=======================================================================DATA_INSIGHT=============================================================
+
+    public ArrayList<ArrayList<String>> getDataByMonth() {
+        SQLiteDatabase database;
+        ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
+        ArrayList<String> arrayList2 = new ArrayList<>();
+        String queryMonth = " SELECT * FROM " + BillContract.addFood.TABLE_NAME_DATA;
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(queryMonth, null);
+        get.moveToFirst();
+        while (get.isAfterLast() == false) {
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_DATE)));
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_MONTH)));
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_YEAR)));
+            arrayList2.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_VALUE)));
+            arrayList1.add(arrayList2);
+            arrayList2 = new ArrayList<>();
+            get.moveToNext();
+        }
+
+        return arrayList1;
+
+    }
+
+    public int getTodayExpance(String currentDate, String currentMonth, String currentYear) {
+        SQLiteDatabase database;
+        ArrayList<String> arrayList1 = new ArrayList<>();
+        String[] select = { currentDate,currentMonth,currentYear
+        };
+        String queryMonth = " SELECT *  FROM " + BillContract.addFood.TABLE_NAME_DATA + " WHERE "
+                + BillContract.addFood.COLUMN_DATA_ORDER_DATE + " = ? AND "
+                + BillContract.addFood.COLUMN_DATA_ORDER_MONTH + " = ? AND "
+                + BillContract.addFood.COLUMN_DATA_ORDER_YEAR + " = ? ";
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(queryMonth, select);
+        get.moveToFirst();
+        while (get.isAfterLast() == false) {
+            arrayList1.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_VALUE)));
+            get.moveToNext();
+        }
+        int  p;
+        int total = 0;
+        for (int i = 0; i < arrayList1.size(); i++) {
+            p = Integer.parseInt(arrayList1.get(i));
+            total = total + p ;
+        }
+        return total;
+    }
+
+    public int totalRevenue() {
+        int total = 0;
+        ArrayList<String> price = new ArrayList<>();
+        SQLiteDatabase database;
+        String queryPrice = " SELECT * FROM "+ BillContract.addFood.TABLE_NAME_DATA ;
+        database = getReadableDatabase();
+        Cursor get1 = database.rawQuery(queryPrice, null);
+        get1.moveToFirst();
+        while (!get1.isAfterLast()) {
+            price.add(get1.getString(get1.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_VALUE)));
+            get1.moveToNext();
+        }
+
+        int  p;
+        for (int i = 0; i < price.size(); i++) {
+            p = Integer.parseInt(price.get(i));
+            total = total + p ;
+        }
+
+        return total;
     }
 
 }

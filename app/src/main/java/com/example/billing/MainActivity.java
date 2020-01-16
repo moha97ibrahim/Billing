@@ -1,16 +1,13 @@
 package com.example.billing;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.badge.BadgeUtils;
+import com.example.billing.ui.insight.InsightActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +15,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -85,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.setting:
                 Intent i = new Intent(MainActivity.this,SettingActivity.class);
                 startActivity(i);
+                return true;
+            case R.id.insight:
+                Intent j = new Intent(MainActivity.this, InsightActivity.class);
+                startActivity(j);
                 return true;
         }
         return super.onOptionsItemSelected(item);

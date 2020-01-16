@@ -13,11 +13,13 @@ public class BillContract {
     public static final String PATH_PRODUCT = "food";
     public static final String PATH_PRODUCT_CART = "cart";
     public static final String PATH_PRODUCT_SETTING = "setting";
+    public static final String PATH_PRODUCT_DATA = "data";
 
     public static final class addFood implements BaseColumns{
         public static final Uri CONTENT_URI = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT);
         public static final Uri CONTENT_URI_CART = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT_CART);
         public static final Uri CONTENT_URI_SETTING = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT_SETTING);
+        public static final Uri CONTENT_URI_DATA = Uri.withAppendedPath(BASE_CONTENT_URI, PATH_PRODUCT_DATA);
 
 
 
@@ -27,6 +29,8 @@ public class BillContract {
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_CART;
         public static final String CONTENT_LIST_TYPE_SETTING =
                 ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_SETTING;
+        public static final String CONTENT_LIST_TYPE_DATA =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_DATA;
 
 
 
@@ -37,6 +41,8 @@ public class BillContract {
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_CART;
         public static final String CONTENT_ITEM_TYPE_SETTING =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_SETTING;
+        public static final String CONTENT_ITEM_TYPE_DATA =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_PRODUCT_DATA;
 
 
 
@@ -72,6 +78,20 @@ public class BillContract {
         public final static String COLUMN_SETTING_NAME = "setting_name";
 
         public final static String COLUMN_SETTING_VALUE = "setting_value";
+
+        public final static String TABLE_NAME_DATA = "data";
+
+        public final static String _ID_DATA = BaseColumns._ID;
+
+        public final static String COLUMN_DATA_ORDER_DATE = "order_date";
+
+        public final static String COLUMN_DATA_ORDER_MONTH = "order_month";
+
+        public final static String COLUMN_DATA_ORDER_YEAR = "order_year";
+
+
+        public final static String COLUMN_DATA_ORDER_VALUE = "order_value";
+
 
 
     }
