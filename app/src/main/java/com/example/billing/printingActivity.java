@@ -2,12 +2,14 @@ package com.example.billing;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,10 +66,9 @@ public class printingActivity extends AppCompatActivity {
     ArrayList<String> dataLine1 = new ArrayList<>();
     ArrayList<String> dataLine2 = new ArrayList<>();
     int TOTALWORD = 30;
-    public static final String DATE_FORMAT_1 = "dd";
-    public static final String DATE_FORMAT_2 = "MMM";
-    public static final String DATE_FORMAT_3 = "yyyy";
     public static final String DATE_FORMAT_4 = "dd-MMM-yyyy";
+
+    ProgressDialog progressDialog;
 
 
     @Override
@@ -118,17 +119,19 @@ public class printingActivity extends AppCompatActivity {
             }
         });
 
+
         buttonprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                printerName.setText("Printing");
                 try {
                     openBlueToothPrinter();
                     printData();
                     BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
                     saveData(dbHelper);
                     dbHelper.truncate();
+                    buttonprint.setText("Done");
                     finish();
-                    buttonprint.setText("Print Owner Copy");
 
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -137,25 +140,6 @@ public class printingActivity extends AppCompatActivity {
         });
 
     }
-
-//    private void printData2() {
-//        try {
-//            arrangeData();
-//            String message = getMessage();
-//            String message2 = getMessage2();
-//            //message += "\n";
-//
-//            outputStream.write(message.getBytes());
-//            outputStream.write(message.getBytes());
-//            outputStream.flush();
-//            stopWorker = true;
-//            outputStream.close();
-//            inputStream.close();
-//            //printerName.setText("printing......");
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
 
     private String getMessage2() {
         dbHelper = new BillDbHelper(getApplicationContext());
@@ -301,6 +285,7 @@ public class printingActivity extends AppCompatActivity {
 
     void printData() throws IOException {
         try {
+
             arrangeData();
             String message = getMessage();
             String message2 = getMessage2();
@@ -321,7 +306,7 @@ public class printingActivity extends AppCompatActivity {
     private String getMessage() {
         dbHelper = new BillDbHelper(getApplicationContext());
         float cartTotal = dbHelper.getTotalSum();
-        String Title =  "         Owners Copy          " + "\n" +
+        String Title =  "          Owners Copy         " + "\n" +
                         "           Mr.Frozen          " + "\n" +
                         " 247,Vasandha Road,Dharapuram " + "\n" +
                         " Order Date :"+ getCurrentFullDate()+ "\n" +
@@ -388,34 +373,42 @@ public class printingActivity extends AppCompatActivity {
     }
 
     public static String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
     public static String getCurrentMonth() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_2);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
     public static String getCurrentYear() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_3);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("yyyy");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
     public static String getCurrentFullDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_4);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat(DATE_FORMAT_4);
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 }

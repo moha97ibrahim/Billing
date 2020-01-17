@@ -180,9 +180,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
 
             addLineSeparator(document);
 
-//            addNewItem(document,"Account Name",Element.ALIGN_LEFT,titlefont);
-//            addNewItem(document,"IBRAHIM",Element.ALIGN_LEFT,titlefont);
-
             addLineSeparator(document);
 
             //addproduct
@@ -190,22 +187,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             addLineSpace(document);
             addNewItem(document, "Product detail", Element.ALIGN_CENTER, titlefont);
             addLineSeparator(document);
-
-//            //addnewItemWith Left and Right product details
-//            addNewItemWithLeftAndRight(document, "Cake", "(0.0%)", titlefont, orderNumberValueFont);
-//            addNewItemWithLeftAndRight(document, "12.0*1000", "12000.0", titlefont, orderNumberValueFont);
-//
-//            addLineSeparator(document);
-//
-//            addNewItemWithLeftAndRight(document, "lava", "(0.0%)", titlefont, orderNumberValueFont);
-//            addNewItemWithLeftAndRight(document, "12.0*1000", "12000.0", titlefont, orderNumberValueFont);
-//
-//            addLineSeparator(document);
-//
-//            //total
-//            addLineSpace(document);
-//            addLineSpace(document);
-
 
             //===============================================================================================================================================
             //database
