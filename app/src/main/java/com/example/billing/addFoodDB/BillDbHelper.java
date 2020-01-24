@@ -302,6 +302,30 @@ public class BillDbHelper extends SQLiteOpenHelper {
         return total;
     }
 
+    public int getMonthlyExpance(String currentMonth, String currentYear) {
+        SQLiteDatabase database;
+        ArrayList<String> arrayList1 = new ArrayList<>();
+        String[] select = {currentMonth,currentYear
+        };
+        String queryMonth = " SELECT *  FROM " + BillContract.addFood.TABLE_NAME_DATA + " WHERE "
+                + BillContract.addFood.COLUMN_DATA_ORDER_MONTH + " = ? AND "
+                + BillContract.addFood.COLUMN_DATA_ORDER_YEAR + " = ? ";
+        database = getReadableDatabase();
+        Cursor get = database.rawQuery(queryMonth, select);
+        get.moveToFirst();
+        while (get.isAfterLast() == false) {
+            arrayList1.add(get.getString(get.getColumnIndex(BillContract.addFood.COLUMN_DATA_ORDER_VALUE)));
+            get.moveToNext();
+        }
+        int  p;
+        int total = 0;
+        for (int i = 0; i < arrayList1.size(); i++) {
+            p = Integer.parseInt(arrayList1.get(i));
+            total = total + p ;
+        }
+        return total;
+    }
+
     public int totalRevenue() {
         int total = 0;
         ArrayList<String> price = new ArrayList<>();

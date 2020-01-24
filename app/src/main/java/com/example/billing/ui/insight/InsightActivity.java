@@ -78,22 +78,13 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
 
     BillDbHelper dbHelper;
 
-    private DatePicker datePicker;
-    private Calendar calendar;
-    private int year, month, day;
     ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
-    ArrayList<String> arrayList2 = new ArrayList<>();
-
-    private TextView TodayExpance;
-    public static final String DATE_FORMAT_1 = "dd";
-    public static final String DATE_FORMAT_2 = "MMM";
-    public static final String DATE_FORMAT_3 = "yyyy";
 
     private ListView insightListView;
     private InsightCursorAdapter insightCursorAdapter;
     private int BILL_LOADER = 0;
 
-    private TextView total_revenue,revenue_per_day;
+    private TextView total_revenue, revenue_per_day;
 
 
     @Override
@@ -102,7 +93,7 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         setContentView(R.layout.activity_insight);
 
         insightListView = findViewById(R.id.totalListView);
-        insightCursorAdapter = new InsightCursorAdapter(getApplicationContext(),null);
+        insightCursorAdapter = new InsightCursorAdapter(getApplicationContext(), null);
         insightListView.setAdapter(insightCursorAdapter);
         InsightActivity.this.getSupportLoaderManager().restartLoader(BILL_LOADER, null, this);
 
@@ -111,14 +102,22 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         // pieChart();
         CartesianChart();
 
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        date = dateFormat.format(calendar.getTime());
+        Log.e("soduficjnalkdjscma;sdkl", date);
+
         total_revenue = findViewById(R.id.totalRevenue);
         String tot_rev = String.valueOf(dbHelper.totalRevenue());
         total_revenue.setText(tot_rev);
 
 
-        try{
+        try {
             revenue_per_day = findViewById(R.id.revenueToday);
-            String today_rev = String.valueOf(dbHelper.getTodayExpance(getCurrentDate(),getCurrentMonth(),getCurrentYear()));
+            String today_rev = String.valueOf(dbHelper.getTodayExpance(getCurrentDate(), getCurrentMonth(), getCurrentYear()));
             revenue_per_day.setText(today_rev);
         } catch (Exception e) {
             e.printStackTrace();
@@ -312,11 +311,21 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         Cartesian cartesian = AnyChart.column();
         AnyChartView anyChartView = findViewById(R.id.any_chart_view1);
         List<DataEntry> data = new ArrayList<>();
-        Map<String, Integer> map = new HashMap<>();
-        map = getMonth();
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            data.add(new ValueDataEntry(entry.getKey(), entry.getValue()));
-        }
+
+
+        data.add(new ValueDataEntry("JAN", dbHelper.getMonthlyExpance("01", getCurrentYear())));
+        data.add(new ValueDataEntry("FEB", dbHelper.getMonthlyExpance("02", getCurrentYear())));
+        data.add(new ValueDataEntry("MAR", dbHelper.getMonthlyExpance("03", getCurrentYear())));
+        data.add(new ValueDataEntry("APR", dbHelper.getMonthlyExpance("04", getCurrentYear())));
+        data.add(new ValueDataEntry("MAY", dbHelper.getMonthlyExpance("05", getCurrentYear())));
+        data.add(new ValueDataEntry("JUN", dbHelper.getMonthlyExpance("06", getCurrentYear())));
+        data.add(new ValueDataEntry("JUL", dbHelper.getMonthlyExpance("07", getCurrentYear())));
+        data.add(new ValueDataEntry("AUG", dbHelper.getMonthlyExpance("08", getCurrentYear())));
+        data.add(new ValueDataEntry("SEP", dbHelper.getMonthlyExpance("09", getCurrentYear())));
+        data.add(new ValueDataEntry("OCT", dbHelper.getMonthlyExpance("10", getCurrentYear())));
+        data.add(new ValueDataEntry("NOV", dbHelper.getMonthlyExpance("11", getCurrentYear())));
+        data.add(new ValueDataEntry("Dec", dbHelper.getMonthlyExpance("12", getCurrentYear())));
+
         Column column = cartesian.column(data);
 
         column.tooltip()
@@ -343,6 +352,7 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         anyChartView.setChart(cartesian);
     }
 
+
     private Map<String, Integer> getMonth() {
         int oldvalue = 0;
         arrayList1 = dbHelper.getDataByMonth();
@@ -363,22 +373,6 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         return map;
     }
 
-    private int getTodayExpance() {
-        int sum=0, val = 0;
-        arrayList1 = dbHelper.getDataByMonth();
-        ArrayList<String> arrayList4 = new ArrayList<>();
-        for (int i = 0; i < arrayList1.size(); i++) {
-            arrayList4 = arrayList1.get(i);
-            if (arrayList4.get(0).equals(getCurrentDate()) && arrayList4.get(1).equals(getCurrentMonth()) && arrayList4.get(2).equals(getCurrentYear())) {
-                val = Integer.parseInt(arrayList4.get(3));
-                sum = sum +val;
-            }
-        }
-
-        return val;
-    }
-
-
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
@@ -386,27 +380,33 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
     }
 
     public static String getCurrentDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_1);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
     public static String getCurrentMonth() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_2);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
     public static String getCurrentYear() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_3);
-        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date today = Calendar.getInstance().getTime();
-        Log.e("date", dateFormat.format(today));
-        return dateFormat.format(today);
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("yyyy");
+        date = dateFormat.format(calendar.getTime());
+        return date;
     }
 
 
