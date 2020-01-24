@@ -1,8 +1,9 @@
 package com.example.billing.ui.cart;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +31,7 @@ import androidx.loader.content.Loader;
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.global.CartList;
+import com.example.billing.printingActivity;
 import com.example.billing.utills.Common;
 import com.example.billing.utills.PdfDocumentAdapter;
 import com.itextpdf.text.BaseColor;
@@ -46,7 +46,6 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
 import com.itextpdf.text.pdf.draw.VerticalPositionMark;
-import com.itextpdf.text.pdf.interfaces.PdfDocumentActions;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -64,25 +63,23 @@ import java.util.ArrayList;
 public class CartFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private CartCursorAdapter cartCursorAdapter;
-    private CartList cartList;
-    private String query;
     private BillDbHelper dbHelper;
     private TextView gTotal, sGST, cGST, cTotal;
     private float grandToatal;
-    private CardView cardViewtot, submitCard;
+    private CardView cardViewtot, submitCard , clearCard;
+    private  ProgressDialog progressDoalog;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
         CartViewModel cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_cart, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
         cTotal = root.findViewById(R.id.cartTotal);
-        cGST = root.findViewById(R.id.cgstView);
-        sGST = root.findViewById(R.id.sgstView);
-        gTotal = root.findViewById(R.id.grandTotalView);
-        cardViewtot = root.findViewById(R.id.cardViewTotal);
+//        cGST = root.findViewById(R.id.cgstView);
+//        sGST = root.findViewById(R.id.sgstView);
+//        gTotal = root.findViewById(R.id.grandTotalView);
+//        cardViewtot = root.findViewById(R.id.cardViewTotal);
         cartViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
@@ -104,9 +101,16 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         submitCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
+                Intent i = new Intent(getActivity(), printingActivity.class);
+                i.putExtra("total",grandToatal);
+                startActivity(i);
+                progressDoalog = new ProgressDialog(getActivity());
+                progressDoalog.setMessage("Loading.....");
+                progressDoalog.show();
+//                  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
             }
         });
+
 
 
         Dexter.withActivity(getActivity())
@@ -212,7 +216,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             for (int i = 0; i < arrayList1.size(); i++) {
                 arrayList2 = arrayList1.get(i);
                 addNewItemWithLeftAndRight(document, arrayList2.get(0), arrayList2.get(1) + " * " + arrayList2.get(2), titlefont, orderNumberValueFont);
-                addNewItemWithLeftAndRight(document, arrayList2.get(1) + " * " + arrayList2.get(2), String.valueOf(Integer.parseInt(arrayList2.get(1))*Integer.parseInt(arrayList2.get(2))), titlefont, orderNumberValueFont);
+                addNewItemWithLeftAndRight(document, arrayList2.get(1) + " * " + arrayList2.get(2), String.valueOf(Integer.parseInt(arrayList2.get(1)) * Integer.parseInt(arrayList2.get(2))), titlefont, orderNumberValueFont);
                 addLineSeparator(document);
             }
             addLineSpace(document);
@@ -333,7 +337,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         String pro[] = {
                 BillContract.addFood._ID_CART,
                 BillContract.addFood.COLUMN_FOOD_NAME_CART,
-                //cartContract.cartItem.COLUMN_FOOD_INGREDIENTS,
                 BillContract.addFood.COLUMN_FOOD_QUANTITY_CART,
                 BillContract.addFood.COLUMN_FOOD_PRICE_CART
         };
@@ -360,5 +363,16 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cartCursorAdapter.swapCursor(null);
 
 
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            progressDoalog.dismiss();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

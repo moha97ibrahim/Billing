@@ -17,8 +17,23 @@ import android.widget.Toast;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.android.gms.ads.VideoController;
+import com.google.android.gms.ads.VideoOptions;
+import com.google.android.gms.ads.formats.NativeAdOptions;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class AddFoodDetailsActivity extends AppCompatActivity {
+
 
     SQLiteDatabase sqLiteDatabase;
     EditText editTextFoodName, editTextPrice, editTextIngredients;
@@ -26,19 +41,27 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
     String FoodNameHolder, PriceHolder, SQLiteDataBaseQueryHolder, IngredientsHolder;
     Boolean EditTextEmptyHold;
 
+
     private static final int EXISTING_BILL_LOADER = 0;
     private Uri mUri;
+
+
+    InterstitialAd mInterstitialAd;
+
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_food_details);
-
-
-        Intent getIntent = getIntent();
-        Log.e("dfkjnvidkjfncmealskdc",""+getIntent);
-        mUri = getIntent.getData();
+//        MobileAds.initialize(this,"ca-app-pub-8942221596028723~1012793998");
+//
+//
+//        mInterstitialAd = new InterstitialAd(this);
+//        mInterstitialAd.setAdUnitId("ca-app-pub-8942221596028723/9587936942");
+//        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//        mInterstitialAd.show();
 
         editTextFoodName = findViewById(R.id.foodName);
         editTextPrice = findViewById(R.id.foodPrice);
@@ -49,6 +72,7 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 CheckEditTextStatus();
                 addData();
+
             }
         });
 

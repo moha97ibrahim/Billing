@@ -24,7 +24,7 @@ import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.global.CartList;
+
 
 import java.util.ArrayList;
 
@@ -41,7 +41,7 @@ public class MenuCursorAdapter extends CursorAdapter {
     private String IDS;
     private String CL;
     private Context context;
-    private CartList cartList;
+
     private Uri mUri;
     private BillDbHelper dbHelper;
     private ArrayList<String> ids;

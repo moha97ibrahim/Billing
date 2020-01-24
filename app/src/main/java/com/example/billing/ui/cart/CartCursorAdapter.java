@@ -15,18 +15,17 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.global.CartList;
 
 public class CartCursorAdapter extends CursorAdapter {
 
     private int QUANTITY = 1;
-    private CartList cartList;
     private String CL;
     private BillDbHelper dbHelper;
     private CartFragment cartFragment;
@@ -50,6 +49,7 @@ public class CartCursorAdapter extends CursorAdapter {
         ImageButton increment = view.findViewById(R.id.imageButtonIncrement);
         ImageButton decrement = view.findViewById(R.id.imageButtonDecrement);
         TextView remove = view.findViewById(R.id.cartRemoveTextView);
+       // CardView clearCard = view.findViewById(R.id.clearCardView);
 
 
         int nameColumnIndex = cursor.getColumnIndex(BillContract.addFood.COLUMN_FOOD_NAME_CART);
@@ -104,7 +104,10 @@ public class CartCursorAdapter extends CursorAdapter {
 
 
 
+
     }
+
+
 
     private void decrementQuantity(TextView quantity, int mark, Context context) {
         dbHelper = new BillDbHelper(context);

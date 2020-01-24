@@ -1,257 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/text_notifications"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:elevation="20dp"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_notifications"
-        app:layout_constraintVertical_bias="0.0">
-
-        <ListView
-            android:id="@+id/cartFoodListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/colorGrey"
-            android:dividerHeight="1dp" />
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewTotal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:elevation="20dp"
-        app:cardBackgroundColor="#FFF8F2"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView3">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFF8F2"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:background="@color/colorWhite"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:text="Total"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/cartTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:gravity="right"
-                    android:text="$100.00"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="15sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:text="CGST (9%)"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/cgstView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:gravity="right"
-                    android:text="$5.76"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:text="SGST (9%)"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/sgstView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:gravity="right"
-                    android:text="$5.76"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="13sp" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/colorGrey"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorWhite"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:text="Grand Total"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/grandTotalView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/helvetica"
-                    android:gravity="right"
-                    android:text="$100.00"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="17sp" />
-
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:elevation="20dp"
-        app:cardBackgroundColor="#FFF8F2"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_notifications"
-        app:layout_constraintVertical_bias="0.0">
-
-    </androidx.cardview.widget.CardView>
+    android:orientation="vertical"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/cardView"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="1.0">
+        android:padding="5dp"
+        android:weightSum="2">
 
-        <androidx.cardview.widget.CardView
+        <TextView
+            android:id="@+id/text_notifications"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:elevation="20dp"
-            app:cardBackgroundColor="#FF7065"
-            app:cardCornerRadius="10dp"
-            android:layout_margin="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/text_notifications"
-            app:layout_constraintVertical_bias="0.0"
-            android:layout_gravity="center"
-            >
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textColor="@color/colorBlack"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/cartFoodListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/colorWhite"
+        android:layout_above="@id/layout_total"
+        android:dividerHeight="1dp" />
+
+    <LinearLayout
+        android:id="@+id/layout_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@color/colorWhite"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="SUBMIT"
-                android:textAlignment="center"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/helvetica"
-                android:textSize="20sp"
-                android:layout_gravity="center"
-                android:textColor="@color/colorWhite"
-                />
+                android:text="@string/total"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
 
-        </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/cartTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/helvetica"
+                android:gravity="right"
+                android:text="$100.00"
+                android:textColor="@color/colorBlack"
+                android:textSize="15sp" />
+
+        </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/colorWhite"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:text="CGST (9%)"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="13sp" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/cgstView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:gravity="right"-->
+<!--                android:text="$5.76"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="13sp" />-->
+
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/colorWhite"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:text="SGST (9%)"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="13sp" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/sgstView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:gravity="right"-->
+<!--                android:text="$5.76"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="13sp" />-->
+
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:background="@color/colorWhite">-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:text="Grand Total"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="17sp" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/grandTotalView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:gravity="right"-->
+<!--                android:text="$100.00"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="17sp" />-->
+
+
+<!--        </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/submitCardView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_margin="10sp"
+                android:elevation="20dp"
+                app:cardBackgroundColor="#F76058"
+                app:cardCornerRadius="10dp"
+                android:layout_weight="1">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/helvetica"
+                    android:text="SUBMIT"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="20sp" />
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+
+
     </LinearLayout>
 
-
-
-
-</LinearLayout>
+</RelativeLayout>

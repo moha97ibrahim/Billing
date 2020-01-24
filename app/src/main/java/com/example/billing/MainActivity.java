@@ -1,8 +1,12 @@
 package com.example.billing;
 
 import android.app.Notification;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.billing.addFoodDB.BillDbHelper;
 import com.google.android.material.badge.BadgeDrawable;
@@ -37,9 +41,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
-
-
         updateBadge();
 
     }
@@ -70,6 +71,23 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new BillDbHelper(getApplicationContext());
         int count = dbHelper.getCount();
         return count;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.more_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.setting:
+                Intent i = new Intent(MainActivity.this,SettingActivity.class);
+                startActivity(i);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
