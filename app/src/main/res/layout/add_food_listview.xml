@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/helvetica"
-                android:text="Choco Lava Cake"
+                android:text="@string/choco_lava_cake"
                 android:textColor="@color/colorBlack"
                 android:textSize="15sp" />
 
@@ -41,7 +41,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans-serif-light"
                 android:maxLines="4"
-                android:text="Rich in choclate, Berrey and Caramel fillingrs"
+                android:text="@string/rich_in_choclate_berrey_and_caramel_fillingrs"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="12sp" />
 
@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/helvetica"
-                android:text="$100"
+                android:text="@string/_100"
                 android:textColor="@color/colorBlack"
                 android:textSize="17sp" />
         </LinearLayout>

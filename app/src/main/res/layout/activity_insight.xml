@@ -68,7 +68,7 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Revenue"
+                            android:text="@string/total_revenue"
                             android:textSize="20sp"
                             android:textColor="@color/colorGrey"
                             android:layout_gravity="center" />
@@ -76,7 +76,7 @@
                             android:id="@+id/totalRevenue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$1000"
+                            android:text="@string/_1000"
                             android:textSize="20sp"
                             android:textColor="@color/colorBlack"
                             android:layout_gravity="center"/>
@@ -102,14 +102,14 @@
                             android:id="@+id/revenueToday"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$1000"
+                            android:text="@string/_1000"
                             android:textSize="25sp"
                             android:textColor="@color/colorBlack"
                             android:layout_gravity="center"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=" / day"
+                            android:text="@string/day"
                             android:textSize="20sp"
                             android:textColor="@color/colorGrey"
                             android:layout_gravity="center"/>

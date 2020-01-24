@@ -1,15 +1,13 @@
-package com.example.billing;
+package com.example.billing.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,18 +23,16 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import android.os.Handler;
 import android.widget.Toast;
 
+import com.example.billing.MainActivity;
+import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-
-import java.util.logging.LogRecord;
 
 public class printingActivity extends AppCompatActivity {
 
@@ -44,6 +40,7 @@ public class printingActivity extends AppCompatActivity {
     Button buttonprint, buttonDisconnect, buttonConnect;
     TextView printerName, printterAttach;
     Switch bluetoothControl;
+    boolean CONNECTER;
 
 
     BluetoothAdapter bluetoothAdapter;
@@ -66,9 +63,7 @@ public class printingActivity extends AppCompatActivity {
     ArrayList<String> dataLine1 = new ArrayList<>();
     ArrayList<String> dataLine2 = new ArrayList<>();
     int TOTALWORD = 30;
-    public static final String DATE_FORMAT_4 = "dd-MMM-yyyy";
-
-    ProgressDialog progressDialog;
+    public static final String DATE_FORMAT_4 = "dd-MMM-yyyy HH:MM";
 
 
     @Override
@@ -82,6 +77,17 @@ public class printingActivity extends AppCompatActivity {
         buttonprint = findViewById(R.id.btnPrint);
         bluetoothControl = findViewById(R.id.bluetoothSwitch);
 
+        try{
+            FindBluetoothDevice();
+            if (!CONNECTER) {
+                buttonprint.setVisibility(View.INVISIBLE);
+            }else{
+                buttonprint.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null).equals("1")) {
                 bluetoothControl.setChecked(true);
@@ -94,10 +100,12 @@ public class printingActivity extends AppCompatActivity {
         }
 
 
+
         bluetoothControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (bluetoothControl.isChecked()) {
+                    buttonprint.setVisibility(View.VISIBLE);
                     try {
                         FindBluetoothDevice();
                         //openBlueToothPrinter();
@@ -108,6 +116,7 @@ public class printingActivity extends AppCompatActivity {
                     }
                 } else {
                     try {
+                        buttonprint.setVisibility(View.INVISIBLE);
                         printerName.setText("No Device Found");
                         disconnectPrint();
                         editor.putString("BLUETOOTH_CONNECTION_STATUS", "0");
@@ -123,37 +132,52 @@ public class printingActivity extends AppCompatActivity {
         buttonprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                printerName.setText("Printing");
-                try {
-                    openBlueToothPrinter();
-                    printData();
-                    BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
-                    saveData(dbHelper);
-                    dbHelper.truncate();
-                    buttonprint.setText("Done");
-                    finish();
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                if (sharedPreferences.getString("BLUETOOTH_NAME", null).length() > 0) {
+                    try {
+                        openBlueToothPrinter();
+                        if (CONNECTER) {
+                            printerName.setText("Printing");
+                            printData();
+                            BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
+                            saveData(dbHelper);
+                            dbHelper.truncate();
+                            buttonprint.setText("Done");
+                            Intent i = new Intent(printingActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                            inputStream.close();
+                        } else {
+                            Toast.makeText(printingActivity.this, "Printer Not Connected", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    Intent seting = new Intent(printingActivity.this, SettingActivity.class);
+                    startActivity(seting);
                 }
             }
         });
 
     }
 
-    private String getMessage2() {
+    private String getMessage() {
         dbHelper = new BillDbHelper(getApplicationContext());
         float cartTotal = dbHelper.getTotalSum();
-        String Title =  "         Customer Copy        " + "\n" +
-                        "           Mr.Frozen          " + "\n" +
-                        " 247,Vasandha Road,Dharapuram " + "\n" +
-                        " Order Date :"+ getCurrentFullDate()+ "\n" +
-                        "          Order Detail        ";
+
+        String header = getHeader("Owners Copy");
+//        String Title = "          Owners Copy         " + "\n" +
+//                "           Mr.Frozen          " + "\n" +
+//                " 247,Vasandha Road,Dharapuram " + "\n" +
+//                " Order Date :" + getCurrentFullDate() + "\n" +
+//                "          Order Detail        ";
         String footer = "------------------------------" + "\n" +
-                        "Total                   " + cartTotal + "\n" +
-                        "------------------------------" + "\n" +
-                        "      Thankyou visit again    " + "\n" +
-                        "------------------------------" ;
+                "Total                   " + cartTotal + "\n" +
+                "------------------------------" + "\n" +
+                "      Thankyou visit again    " + "\n" +
+                "------------------------------";
 
         String message = "";
 
@@ -162,11 +186,62 @@ public class printingActivity extends AppCompatActivity {
                     dataLine2.get(i) + "\n";
         }
 
-        String message1 = Title + "\n" +
+        String message1 = header + "\n" +
                 message + "\n" +
                 footer;
         Log.e("messge", "\n" + message1);
         return message1;
+    }
+
+    private String getMessage2() {
+        dbHelper = new BillDbHelper(getApplicationContext());
+        float cartTotal = dbHelper.getTotalSum();
+        String header = getHeader("Customer Copy");
+//        String Title = "         Customer Copy        " + "\n" +
+//                "           Mr.Frozen          " + "\n" +
+//                " 247,Vasandha Road,Dharapuram " + "\n" +
+//                " Order Date :" + getCurrentFullDate() + "\n" +
+//                "          Order Detail        ";
+        String footer = "------------------------------" + "\n" +
+                "Total                   " + cartTotal + "\n" +
+                "------------------------------" + "\n" +
+                "      Thankyou visit again    " + "\n" +
+                "------------------------------";
+
+        String message = "";
+
+        for (int i = 0; i < dataLine1.size(); i++) {
+            message = message + dataLine1.get(i) + "\n" +
+                    dataLine2.get(i) + "\n";
+        }
+
+        String message1 = header + "\n" +
+                message + "\n" +
+                footer;
+        Log.e("messge", "\n" + message1);
+        return message1;
+    }
+
+    private String getHeader(String copy) {
+        String name = sharedPreferences.getString("SHOP_NAME", null);
+        String address = sharedPreferences.getString("SHOP_ADDRESS", null);
+        int nameLength = name.length();
+        int addresLength = address.length();
+        int nameSpace = (TOTALWORD - nameLength) / 2;
+        int addSpace;
+
+        if (addresLength <= TOTALWORD || addresLength <= TOTALWORD - 1) {
+            addSpace = (TOTALWORD - addresLength) / 2;
+        } else {
+            addSpace = 0;
+        }
+
+        return getSpace((TOTALWORD - nameLength) / 2) + copy + getSpace((TOTALWORD - nameLength) / 2) + "\n" +
+                getSpace(nameSpace) + name + getSpace(nameSpace) + "\n" +
+                getSpace(addSpace) + address + getSpace(addSpace) + "\n" +
+                " Order Date :" + getCurrentFullDate() + "\n" +
+                "          Order Detail        ";
+
     }
 
     private void saveData(BillDbHelper dbHelper) {
@@ -198,13 +273,18 @@ public class printingActivity extends AppCompatActivity {
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
-                    if (pairedDev.getName().equals("BlueTooth Printer")) {   //yet to set
+                    if (pairedDev.getName().equals(sharedPreferences.getString("BLUETOOTH_NAME", null))) {   //yet to set
                         bluetoothDevice = pairedDev;
                         printerName.setText("" + pairedDev.getName());
+                        CONNECTER = true;
                         break;
 
                     } else {
                         printerName.setText("not paired" + pairedDev.getName());
+                        CONNECTER = false;
+                        buttonprint.setVisibility(View.INVISIBLE);
+                        Intent i = new Intent(printingActivity.this,SettingActivity.class);
+                        startActivity(i);
                     }
                 }
             }
@@ -291,45 +371,19 @@ public class printingActivity extends AppCompatActivity {
             String message2 = getMessage2();
             //message += "\n";
 
+
             outputStream.write(message.getBytes());
             outputStream.write(message2.getBytes());
             outputStream.flush();
             stopWorker = true;
             outputStream.close();
-            inputStream.close();
+
             //printerName.setText("printing......");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private String getMessage() {
-        dbHelper = new BillDbHelper(getApplicationContext());
-        float cartTotal = dbHelper.getTotalSum();
-        String Title =  "          Owners Copy         " + "\n" +
-                        "           Mr.Frozen          " + "\n" +
-                        " 247,Vasandha Road,Dharapuram " + "\n" +
-                        " Order Date :"+ getCurrentFullDate()+ "\n" +
-                        "          Order Detail        ";
-        String footer = "------------------------------" + "\n" +
-                "Total                   " + cartTotal + "\n" +
-                "------------------------------" + "\n" +
-                "      Thankyou visit again    " + "\n" +
-                "------------------------------" ;
-
-        String message = "";
-
-        for (int i = 0; i < dataLine1.size(); i++) {
-            message = message + dataLine1.get(i) + "\n" +
-                    dataLine2.get(i) + "\n";
-        }
-
-        String message1 = Title + "\n" +
-                message + "\n" +
-                footer;
-        Log.e("messge", "\n" + message1);
-        return message1;
-    }
 
     void disconnectPrint() throws IOException {
         try {

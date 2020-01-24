@@ -23,6 +23,7 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
+    <loaded-nodes />
     <loaded-nodes>
       <connection connection-id="70043e90-ff1f-4aab-87d8-8b1d0108f9d0">
         <schema name="main" object-types="view, table" />

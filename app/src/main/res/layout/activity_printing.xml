@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helvetica"
-        android:text="Printer Name"
+        android:text="@string/printer_name"
         android:textColor="@color/colorBlack"
         android:textSize="20sp" />
 
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/helvetica"
-        android:text="No Bluetooth Found"
+        android:text="@string/no_bluetooth_found"
         android:textColor="@android:color/darker_gray"
         android:textSize="15sp"
         android:layout_below="@id/textViewPrinterName"/>
@@ -45,7 +45,7 @@
         android:layout_height="60dp"
         android:background="@android:color/holo_red_light"
         android:textColor="@color/colorWhite"
-        android:text="Print"
+        android:text="@string/print"
         android:fontFamily="@font/helvetica"
         android:textSize="20sp"
         android:layout_alignParentBottom="true" />

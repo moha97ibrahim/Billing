@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.billing.addFoodDB.BillDbHelper;
+import com.example.billing.ui.About;
+import com.example.billing.ui.SettingActivity;
 import com.example.billing.ui.insight.InsightActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -78,12 +80,16 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.setting:
-                Intent i = new Intent(MainActivity.this,SettingActivity.class);
+                Intent i = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(i);
                 return true;
             case R.id.insight:
                 Intent j = new Intent(MainActivity.this, InsightActivity.class);
                 startActivity(j);
+                return true;
+            case R.id.about:
+                Intent k = new Intent(MainActivity.this, About.class);
+                startActivity(k);
                 return true;
         }
         return super.onOptionsItemSelected(item);

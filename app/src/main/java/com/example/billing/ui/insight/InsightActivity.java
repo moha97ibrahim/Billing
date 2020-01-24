@@ -9,7 +9,6 @@ import androidx.loader.content.Loader;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.print.PrintAttributes;
@@ -18,7 +17,6 @@ import android.print.PrintManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,16 +26,12 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
-import com.anychart.charts.Pie;
 import com.anychart.core.cartesian.series.Column;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
-import com.anychart.enums.VAlign;
 import com.anychart.graphics.vector.Anchor;
-import com.example.billing.MainActivity;
 import com.example.billing.R;
-import com.example.billing.SettingActivity;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
 import com.example.billing.utills.Common;
@@ -68,11 +62,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 public class InsightActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 

@@ -1,41 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingActivity">
+    android:background="@color/colorWhite"
+    android:orientation="vertical"
+    tools:context=".ui.SettingActivity"
+    android:padding="10dp"
+    >
 
-    <RelativeLayout
+
+    <EditText
+        android:id="@+id/shopName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000"
+        android:hint="@string/shop_name"
+        android:maxLength="30"
+        android:textColorHint="@color/colorGrey" />
+
+
+    <EditText
+        android:id="@+id/shopAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000 "
+        android:hint="@string/shop_address"
+        android:maxLength="30"
+        android:textColorHint="@color/colorGrey" />
+
+    <EditText
+        android:id="@+id/bluetoothName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#000000 "
+        android:hint="@string/bluetooth_name"
+        android:textColorHint="@color/colorGrey" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-
-        <EditText
-            android:id="@+id/shopName"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Shop Name" />
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:text="@string/apply"
+                android:textAlignment="center"
+                android:background="@android:color/holo_red_light"
+                android:textColor="#000000"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="20dp"/>
+
+        </RelativeLayout>
 
 
-        <EditText
-            android:id="@+id/shopAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/shopName"
-            android:hint="Shop Address" />
+
+    </LinearLayout>
 
 
-    </RelativeLayout>
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:text="APPLY"
-        android:textAlignment="center" />
-
-
-</RelativeLayout>
+</LinearLayout>

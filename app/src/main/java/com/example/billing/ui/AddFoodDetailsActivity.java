@@ -17,20 +17,6 @@ import android.widget.Toast;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.NativeExpressAdView;
-import com.google.android.gms.ads.VideoController;
-import com.google.android.gms.ads.VideoOptions;
-import com.google.android.gms.ads.formats.NativeAdOptions;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 public class AddFoodDetailsActivity extends AppCompatActivity {
 
@@ -46,7 +32,6 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
     private Uri mUri;
 
 
-    InterstitialAd mInterstitialAd;
 
 
 
@@ -107,6 +92,7 @@ public class AddFoodDetailsActivity extends AppCompatActivity {
         IngredientsHolder = editTextIngredients.getText().toString();
         if (TextUtils.isEmpty(FoodNameHolder) || TextUtils.isEmpty(PriceHolder) || TextUtils.isEmpty(IngredientsHolder)) {
             EditTextEmptyHold = false;
+            Toast.makeText(AddFoodDetailsActivity.this,"Field is Empty",Toast.LENGTH_SHORT).show();
         } else {
             EditTextEmptyHold = true;
         }

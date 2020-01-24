@@ -143,7 +143,7 @@
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/helvetica"
-                android:text="Grand Total"
+                android:text="@string/grand_total"
                 android:textColor="@color/colorBlack"
                 android:textSize="17sp" />
 
@@ -155,7 +155,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/helvetica"
                 android:gravity="right"
-                android:text="$100.00"
+                android:text="@string/_100_00"
                 android:textColor="@color/colorBlack"
                 android:textSize="17sp" />
 
@@ -185,7 +185,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/helvetica"
-                    android:text="SUBMIT"
+                    android:text="@string/submit"
                     android:textAlignment="center"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp" />

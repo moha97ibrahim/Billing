@@ -1,15 +1,11 @@
 package com.example.billing.ui.cart;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.print.PrintAttributes;
-import android.print.PrintDocumentAdapter;
-import android.print.PrintManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,34 +27,9 @@ import androidx.loader.content.Loader;
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
-import com.example.billing.printingActivity;
-import com.example.billing.utills.Common;
-import com.example.billing.utills.PdfDocumentAdapter;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.pdf.draw.LineSeparator;
-import com.itextpdf.text.pdf.draw.VerticalPositionMark;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+import com.example.billing.ui.printingActivity;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 
 public class CartFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -94,180 +65,36 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cartListView.setAdapter(cartCursorAdapter);
         getActivity().getSupportLoaderManager().restartLoader(BILL_LOADER, null, this);
         submitCard = root.findViewById(R.id.submitCardView);
+        cartCursorAdapter.notifyDataSetChanged();
         submitCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                    Intent i = new Intent(getActivity(), printingActivity.class);
-                    i.putExtra("total", grandToatal);
-                    startActivity(i);
-
-//                  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
+                checkPrint();
             }
         });
 
 
 
-
-
-
-
-
-        Dexter.withActivity(getActivity())
-                .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                });
-
-
         return root;
     }
 
-    private void createPDFFile(String path) {
-        if (new File(path).exists()) {
-            new File(path).delete();
-        }
-        try {
-            Document document = new Document();
-            //save
-            PdfWriter.getInstance(document, new FileOutputStream(path));
-            //open to write
-            document.open();
+    private void checkPrint() {
+        if(dbHelper.getCount()>0){
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (!bluetoothAdapter.isEnabled()) {
+                Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBT, 0);
 
-            //setting
-            document.setPageSize(PageSize.A9);
-            document.addCreationDate();
-            document.addAuthor("AUTHOR");
-            document.addCreator("AUTHOR");
-
-
-            //font setting
-            BaseColor colorAssent = new BaseColor(0, 0, 0, 1);
-            float fontSize = 13.0f;
-            float valueFontSize = 10.0f;
-
-            //custom font
-            BaseFont fontname = BaseFont.createFont("res/font/helvetica.ttf", "UTF-8", BaseFont.EMBEDDED);
-
-            //title  font
-            Font titlefont = new Font(fontname, 16.0f, Font.NORMAL, BaseColor.BLACK);
-            addNewItem(document, "Order Details", Element.ALIGN_CENTER, titlefont);
-
-            //add more
-            Font orderNumberFont = new Font(fontname, fontSize, Font.NORMAL, colorAssent);
-            addNewItem(document, "order No", Element.ALIGN_LEFT, titlefont);
-
-            Font orderNumberValueFont = new Font(fontname, valueFontSize, Font.NORMAL, BaseColor.BLACK);
-            addNewItem(document, "#717171", Element.ALIGN_LEFT, titlefont);
-
-            addLineSeparator(document);
-
-            addNewItem(document, "Order Date", Element.ALIGN_LEFT, titlefont);
-            addNewItem(document, "01.01.2020", Element.ALIGN_LEFT, titlefont);
-
-            addLineSeparator(document);
-
-            addLineSeparator(document);
-
-            //addproduct
-
-            addLineSpace(document);
-            addNewItem(document, "Product detail", Element.ALIGN_CENTER, titlefont);
-            addLineSeparator(document);
-
-            //===============================================================================================================================================
-            //database
-            BillDbHelper dbHelper = new BillDbHelper(getContext());
-            ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
-            ArrayList<String> arrayList2 = new ArrayList<>();
-            arrayList1 = dbHelper.getCart();
-            for (int i = 0; i < arrayList1.size(); i++) {
-                arrayList2 = arrayList1.get(i);
-                addNewItemWithLeftAndRight(document, arrayList2.get(0), arrayList2.get(1) + " * " + arrayList2.get(2), titlefont, orderNumberValueFont);
-                addNewItemWithLeftAndRight(document, arrayList2.get(1) + " * " + arrayList2.get(2), String.valueOf(Integer.parseInt(arrayList2.get(1)) * Integer.parseInt(arrayList2.get(2))), titlefont, orderNumberValueFont);
-                addLineSeparator(document);
+            } else {
+                Intent i = new Intent(getActivity(), printingActivity.class);
+                i.putExtra("total", grandToatal);
+                startActivity(i);
             }
-            addLineSpace(document);
-            addLineSpace(document);
-            addNewItemWithLeftAndRight(document, "Total", String.valueOf(dbHelper.getTotalSum()), titlefont, orderNumberValueFont);
-            addLineSpace(document);
-            addNewItemWithLeftAndRight(document, "CGST", "9%", titlefont, orderNumberValueFont);
-            addLineSpace(document);
-            addNewItemWithLeftAndRight(document, "SGST", "9%", titlefont, orderNumberValueFont);
-            addLineSpace(document);
-            addNewItemWithLeftAndRight(document, "Grand Total", String.valueOf(dbHelper.getTotalSum()), titlefont, orderNumberValueFont);
-            addLineSpace(document);
 
-//================================================================================================================================================
-//            addNewItemWithLeftAndRight(document, "Total", String.valueOf(dbHelper.getTotalSum()), titlefont, orderNumberValueFont);
-
-            document.close();
-
-            Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
-
-            printPdf();
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-    }
-
-    private void printPdf() {
-        PrintManager printManager = (PrintManager) getContext().getSystemService(Context.PRINT_SERVICE);
-        try {
-            PrintDocumentAdapter printDocumentAdapter = new PdfDocumentAdapter(getActivity(), Common.getAppPath(getActivity()) + "test_pdf");
-            printManager.print("Document", printDocumentAdapter, new PrintAttributes.Builder().build());
-        } catch (Exception ex) {
-            Log.d("edm", "" + ex.getMessage());
+        else{
+            Toast.makeText(getActivity(),"Cart is Empty",Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    private void addNewItemWithLeftAndRight(Document document, String textLeft, String textRight, Font textLeftFont, Font textRightFont) throws DocumentException {
-        Chunk chunkTextLeft = new Chunk(textLeft, textLeftFont);
-        Chunk chunkTextRight = new Chunk(textRight, textRightFont);
-        Paragraph p = new Paragraph(chunkTextLeft);
-        p.add(new Chunk(new VerticalPositionMark()));
-        p.add(chunkTextRight);
-        document.add(p);
-    }
-
-    private void addLineSeparator(Document document) throws DocumentException {
-        LineSeparator lineSeparator = new LineSeparator();
-        lineSeparator.setLineColor(new BaseColor(1, 1, 0, 0));
-        addLineSpace(document);
-        document.add(new Chunk(lineSeparator));
-        addLineSpace(document);
-
-    }
-
-    private void addLineSpace(Document document) throws DocumentException {
-        document.add(new Paragraph(""));
-    }
-
-    private void addNewItem(Document document, String text, int align, Font font) throws DocumentException {
-        Chunk chunk = new Chunk(text, font);
-        Paragraph paragraph = new Paragraph(chunk);
-        paragraph.setAlignment(align);
-        document.add(paragraph);
     }
 
     @Override
