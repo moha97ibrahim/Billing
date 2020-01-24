@@ -66,8 +66,9 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     private BillDbHelper dbHelper;
     private TextView gTotal, sGST, cGST, cTotal;
     private float grandToatal;
-    private CardView cardViewtot, submitCard , clearCard;
-    private  ProgressDialog progressDoalog;
+    private CardView cardViewtot, submitCard, clearCard;
+    private ProgressDialog progressDoalog;
+    int BILL_LOADER = 0;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,10 +76,10 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         CartViewModel cartViewModel = ViewModelProviders.of(this).get(CartViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_cart, container, false);
         final TextView textView = root.findViewById(R.id.text_notifications);
-        cTotal = root.findViewById(R.id.cartTotal);
+        // cTotal = root.findViewById(R.id.cartTotal);
 //        cGST = root.findViewById(R.id.cgstView);
 //        sGST = root.findViewById(R.id.sgstView);
-//        gTotal = root.findViewById(R.id.grandTotalView);
+        gTotal = root.findViewById(R.id.grandTotal);
 //        cardViewtot = root.findViewById(R.id.cardViewTotal);
         cartViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -91,25 +92,24 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         cartListView.setEmptyView(textView);
         cartCursorAdapter = new CartCursorAdapter(getActivity(), null);
         cartListView.setAdapter(cartCursorAdapter);
-        int BILL_LOADER = 0;
         getActivity().getSupportLoaderManager().restartLoader(BILL_LOADER, null, this);
-
-
         submitCard = root.findViewById(R.id.submitCardView);
-
-
         submitCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), printingActivity.class);
-                i.putExtra("total",grandToatal);
-                startActivity(i);
-                progressDoalog = new ProgressDialog(getActivity());
-                progressDoalog.setMessage("Loading.....");
-                progressDoalog.show();
+
+                    Intent i = new Intent(getActivity(), printingActivity.class);
+                    i.putExtra("total", grandToatal);
+                    startActivity(i);
+
 //                  createPDFFile(Common.getAppPath(getActivity()) + "test_pdf");
             }
         });
+
+
+
+
+
 
 
 
@@ -180,9 +180,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
 
             addLineSeparator(document);
 
-//            addNewItem(document,"Account Name",Element.ALIGN_LEFT,titlefont);
-//            addNewItem(document,"IBRAHIM",Element.ALIGN_LEFT,titlefont);
-
             addLineSeparator(document);
 
             //addproduct
@@ -190,22 +187,6 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             addLineSpace(document);
             addNewItem(document, "Product detail", Element.ALIGN_CENTER, titlefont);
             addLineSeparator(document);
-
-//            //addnewItemWith Left and Right product details
-//            addNewItemWithLeftAndRight(document, "Cake", "(0.0%)", titlefont, orderNumberValueFont);
-//            addNewItemWithLeftAndRight(document, "12.0*1000", "12000.0", titlefont, orderNumberValueFont);
-//
-//            addLineSeparator(document);
-//
-//            addNewItemWithLeftAndRight(document, "lava", "(0.0%)", titlefont, orderNumberValueFont);
-//            addNewItemWithLeftAndRight(document, "12.0*1000", "12000.0", titlefont, orderNumberValueFont);
-//
-//            addLineSeparator(document);
-//
-//            //total
-//            addLineSpace(document);
-//            addLineSpace(document);
-
 
             //===============================================================================================================================================
             //database
@@ -291,20 +272,45 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onResume() {
-        updateValue();
+        update();
         super.onResume();
 
     }
+
+    private void update() {
+        try {
+            Log.e("run", "run");
+            dbHelper = new BillDbHelper(getContext());
+            float cartTotal = dbHelper.getTotalSum();
+            gTotal.setText(String.valueOf(cartTotal));
+            reload(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void reload(int i) {
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                update();
+            }
+        };
+        handler.postDelayed(runnable,i);
+    }
+
 
     private void refresh(int i) {
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                Log.e("run", "run");
                 updateValue();
             }
         };
-
         handler.postDelayed(runnable, i);
     }
 
@@ -312,6 +318,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
         DecimalFormat precision = new DecimalFormat("0.00");
 
         try {
+            getActivity().getSupportLoaderManager().restartLoader(BILL_LOADER, null, this);
             Log.e("run", "run");
             dbHelper = new BillDbHelper(getContext());
             float cartTotal = dbHelper.getTotalSum();
@@ -322,7 +329,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
             cTotal.setText(precision.format(cartTotal));
             cGST.setText(precision.format(CGST));
             sGST.setText(precision.format(SGST));
-            gTotal.setText(precision.format(grandToatal));
+            gTotal.setText(String.valueOf(cartTotal));
             refresh(1);
         } catch (NullPointerException ignored) {
         }
@@ -370,7 +377,7 @@ public class CartFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onStop() {
         super.onStop();
         try {
-            progressDoalog.dismiss();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

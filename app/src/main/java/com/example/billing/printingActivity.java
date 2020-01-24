@@ -2,11 +2,15 @@ package com.example.billing;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,12 +22,18 @@ import android.widget.TextView;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import android.os.Handler;
+import android.widget.Toast;
 
+import com.example.billing.addFoodDB.BillContract;
 import com.example.billing.addFoodDB.BillDbHelper;
 
 import java.util.logging.LogRecord;
@@ -53,9 +63,13 @@ public class printingActivity extends AppCompatActivity {
     String BLUETOOTH_SETTING = "BLUETOOTH_CONNECTION_STATUS";
     SharedPreferences sharedPreferences;
 
-    ArrayList<String> dataLine1= new ArrayList<>();
-    ArrayList<String> dataLine2= new ArrayList<>();
+    ArrayList<String> dataLine1 = new ArrayList<>();
+    ArrayList<String> dataLine2 = new ArrayList<>();
     int TOTALWORD = 30;
+    public static final String DATE_FORMAT_4 = "dd-MMM-yyyy";
+
+    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,17 +82,16 @@ public class printingActivity extends AppCompatActivity {
         buttonprint = findViewById(R.id.btnPrint);
         bluetoothControl = findViewById(R.id.bluetoothSwitch);
 
-        if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null).equals("1")) {
-            bluetoothControl.setChecked(true);
-            FindBluetoothDevice();
-            try {
-                openBlueToothPrinter();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            if (sharedPreferences.getString("BLUETOOTH_CONNECTION_STATUS", null).equals("1")) {
+                bluetoothControl.setChecked(true);
+                FindBluetoothDevice();
+                // openBlueToothPrinter();
+            } else
+                bluetoothControl.setChecked(false);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        else
-            bluetoothControl.setChecked(false);
 
 
         bluetoothControl.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +100,7 @@ public class printingActivity extends AppCompatActivity {
                 if (bluetoothControl.isChecked()) {
                     try {
                         FindBluetoothDevice();
-                        openBlueToothPrinter();
+                        //openBlueToothPrinter();
                         editor.putString("BLUETOOTH_CONNECTION_STATUS", "1");
                         editor.apply();
                     } catch (Exception ex) {
@@ -106,39 +119,18 @@ public class printingActivity extends AppCompatActivity {
             }
         });
 
-//
-//        buttonConnect.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try{
-//                    FindBluetoothDevice();
-//                    openBlueToothPrinter();
-//                }
-//                catch (Exception ex){
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
 
-
-//        buttonDisconnect.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try{
-//                   disconnectPrint();
-//                }
-//                catch (Exception ex){
-//                    ex.printStackTrace();
-//                }
-//            }
-//        });
         buttonprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                printerName.setText("Printing");
                 try {
+                    openBlueToothPrinter();
                     printData();
                     BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
+                    saveData(dbHelper);
                     dbHelper.truncate();
+                    buttonprint.setText("Done");
                     finish();
 
                 } catch (Exception ex) {
@@ -146,6 +138,49 @@ public class printingActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private String getMessage2() {
+        dbHelper = new BillDbHelper(getApplicationContext());
+        float cartTotal = dbHelper.getTotalSum();
+        String Title =  "         Customer Copy        " + "\n" +
+                        "           Mr.Frozen          " + "\n" +
+                        " 247,Vasandha Road,Dharapuram " + "\n" +
+                        " Order Date :"+ getCurrentFullDate()+ "\n" +
+                        "          Order Detail        ";
+        String footer = "------------------------------" + "\n" +
+                        "Total                   " + cartTotal + "\n" +
+                        "------------------------------" + "\n" +
+                        "      Thankyou visit again    " + "\n" +
+                        "------------------------------" ;
+
+        String message = "";
+
+        for (int i = 0; i < dataLine1.size(); i++) {
+            message = message + dataLine1.get(i) + "\n" +
+                    dataLine2.get(i) + "\n";
+        }
+
+        String message1 = Title + "\n" +
+                message + "\n" +
+                footer;
+        Log.e("messge", "\n" + message1);
+        return message1;
+    }
+
+    private void saveData(BillDbHelper dbHelper) {
+        ContentValues values = new ContentValues();
+        values.put(BillContract.addFood.COLUMN_DATA_ORDER_DATE, getCurrentDate());
+        values.put(BillContract.addFood.COLUMN_DATA_ORDER_MONTH, getCurrentMonth());
+        values.put(BillContract.addFood.COLUMN_DATA_ORDER_YEAR, getCurrentYear());
+        values.put(BillContract.addFood.COLUMN_DATA_ORDER_VALUE, dbHelper.getTotalSum());
+        Uri newUri = getApplicationContext().getContentResolver().insert(BillContract.addFood.CONTENT_URI_DATA, values);
+        if (newUri == null) {
+            Toast.makeText(getApplicationContext(), "Data Cancelled", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Data Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -201,7 +236,7 @@ public class printingActivity extends AppCompatActivity {
             final byte delimeter = 10;
             stopWorker = false;
             readBufferPosition = 0;
-            readBuffer = new byte[1024];
+            readBuffer = new byte[2048];
 
             thread = new Thread(new Runnable() {
                 @Override
@@ -250,10 +285,18 @@ public class printingActivity extends AppCompatActivity {
 
     void printData() throws IOException {
         try {
+
             arrangeData();
             String message = getMessage();
-           //message += "\n";
+            String message2 = getMessage2();
+            //message += "\n";
+
             outputStream.write(message.getBytes());
+            outputStream.write(message2.getBytes());
+            outputStream.flush();
+            stopWorker = true;
+            outputStream.close();
+            inputStream.close();
             //printerName.setText("printing......");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -263,25 +306,29 @@ public class printingActivity extends AppCompatActivity {
     private String getMessage() {
         dbHelper = new BillDbHelper(getApplicationContext());
         float cartTotal = dbHelper.getTotalSum();
-        String  Title = "           Mr.Frozen          "+"\n"+
-                        " 247,Vasandha Road,Dharapuram "+"\n"+
+        String Title =  "          Owners Copy         " + "\n" +
+                        "           Mr.Frozen          " + "\n" +
+                        " 247,Vasandha Road,Dharapuram " + "\n" +
+                        " Order Date :"+ getCurrentFullDate()+ "\n" +
                         "          Order Detail        ";
-        String  footer= "------------------------------"+"\n"+
-                        "Total                   "+cartTotal+"\n"+
-                        "------------------------------"+"\n"+
-                        "      Thankyou visit again    ";
+        String footer = "------------------------------" + "\n" +
+                "Total                   " + cartTotal + "\n" +
+                "------------------------------" + "\n" +
+                "      Thankyou visit again    " + "\n" +
+                "------------------------------" ;
+
         String message = "";
 
         for (int i = 0; i < dataLine1.size(); i++) {
-            message = message+dataLine1.get(i)+"\n"+
-                    dataLine2.get(i)+"\n";
+            message = message + dataLine1.get(i) + "\n" +
+                    dataLine2.get(i) + "\n";
         }
 
-        String message1 = Title+"\n"+
-                  message+"\n"+
+        String message1 = Title + "\n" +
+                message + "\n" +
                 footer;
-        Log.e("messge","\n"+message1);
-        return message1 ;
+        Log.e("messge", "\n" + message1);
+        return message1;
     }
 
     void disconnectPrint() throws IOException {
@@ -296,7 +343,7 @@ public class printingActivity extends AppCompatActivity {
         }
     }
 
-    private String arrangeData(){
+    private String arrangeData() {
         String message = "";
         BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
         ArrayList<ArrayList<String>> arrayList1 = new ArrayList<>();
@@ -308,21 +355,60 @@ public class printingActivity extends AppCompatActivity {
             String qunatity = arrayList2.get(1);
             String price = arrayList2.get(2);
             int totalCountLine1 = foodName.length() + qunatity.length() + 1;
-            int totalCountLine2 = price.length() + (String.valueOf(Integer.parseInt(qunatity)*Integer.parseInt(price))).length();
+            int totalCountLine2 = price.length() + (String.valueOf(Integer.parseInt(qunatity) * Integer.parseInt(price))).length();
             int space1 = TOTALWORD - totalCountLine1;
             int space2 = TOTALWORD - totalCountLine2;
-            dataLine1.add(""+foodName+getSpace(space1)+qunatity+"*");
-            dataLine2.add(""+price+getSpace(space2)+ Integer.parseInt(qunatity) * Integer.parseInt(price));
+            dataLine1.add("" + foodName + getSpace(space1) + qunatity + "*");
+            dataLine2.add("" + price + getSpace(space2) + Integer.parseInt(qunatity) * Integer.parseInt(price));
         }
         return message;
     }
 
     private String getSpace(int space) {
         String spaces = "";
-        for(int i=0;i<space;i++){
-            spaces =  spaces + " ";
+        for (int i = 0; i < space; i++) {
+            spaces = spaces + " ";
         }
         return spaces;
     }
 
+    public static String getCurrentDate() {
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("dd");
+        date = dateFormat.format(calendar.getTime());
+        return date;
+    }
+
+    public static String getCurrentMonth() {
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("MM");
+        date = dateFormat.format(calendar.getTime());
+        return date;
+    }
+
+    public static String getCurrentYear() {
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat("yyyy");
+        date = dateFormat.format(calendar.getTime());
+        return date;
+    }
+
+    public static String getCurrentFullDate() {
+        Calendar calendar;
+        SimpleDateFormat dateFormat;
+        String date;
+        calendar = Calendar.getInstance();
+        dateFormat = new SimpleDateFormat(DATE_FORMAT_4);
+        date = dateFormat.format(calendar.getTime());
+        return date;
+    }
 }

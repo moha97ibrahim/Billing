@@ -40,36 +40,36 @@
         android:orientation="vertical"
         android:layout_alignParentBottom="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
 
-            android:background="@color/colorWhite"
-            android:orientation="horizontal">
+<!--            android:background="@color/colorWhite"-->
+<!--            android:orientation="horizontal">-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/helvetica"
-                android:text="@string/total"
-                android:textColor="@color/colorBlack"
-                android:textSize="15sp" />
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:text="@string/total"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="15sp" />-->
 
-            <TextView
-                android:id="@+id/cartTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:fontFamily="@font/helvetica"
-                android:gravity="right"
-                android:text="$100.00"
-                android:textColor="@color/colorBlack"
-                android:textSize="15sp" />
+<!--            <TextView-->
+<!--                android:id="@+id/cartTotal"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:fontFamily="@font/helvetica"-->
+<!--                android:gravity="right"-->
+<!--                android:text="$100.00"-->
+<!--                android:textColor="@color/colorBlack"-->
+<!--                android:textSize="15sp" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
 <!--        <LinearLayout-->
 <!--            android:layout_width="match_parent"-->
@@ -131,36 +131,36 @@
 
 <!--        </LinearLayout>-->
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:background="@color/colorWhite">-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/colorWhite">
 
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="10dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:fontFamily="@font/helvetica"-->
-<!--                android:text="Grand Total"-->
-<!--                android:textColor="@color/colorBlack"-->
-<!--                android:textSize="17sp" />-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/helvetica"
+                android:text="Grand Total"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp" />
 
-<!--            <TextView-->
-<!--                android:id="@+id/grandTotalView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="10dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:fontFamily="@font/helvetica"-->
-<!--                android:gravity="right"-->
-<!--                android:text="$100.00"-->
-<!--                android:textColor="@color/colorBlack"-->
-<!--                android:textSize="17sp" />-->
+            <TextView
+                android:id="@+id/grandTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/helvetica"
+                android:gravity="right"
+                android:text="$100.00"
+                android:textColor="@color/colorBlack"
+                android:textSize="17sp" />
 
 
-<!--        </LinearLayout>-->
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

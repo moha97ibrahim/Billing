@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="4">
+            <TextView
+                android:id="@+id/orderId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Order ID : 21"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:layout_weight="4"
+                android:layout_marginBottom="5dp"/>
+            <TextView
+                android:id="@+id/orderDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date  : 21-02-2020"
+                android:textColor="@color/colorBlack"
+                android:textSize="16sp"
+                android:layout_weight="4"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/orderValue"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="$100"
+            android:textColor="@color/colorBlack"
+            android:textSize="25sp"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+</LinearLayout>
