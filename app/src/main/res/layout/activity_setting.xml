@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     android:orientation="vertical"
     tools:context=".ui.SettingActivity"
-    android:padding="10dp"
-    >
+    android:padding="10dp">
 
 
     <EditText
@@ -46,6 +46,18 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/adView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="100dp"
+                ads:adSize="BANNER"
+                ads:adUnitId="ca-app-pub-8942221596028723/2944293502"/>
+
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"

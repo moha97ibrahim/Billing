@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.billing.R;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class SettingActivity extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private Button saveButton;
     private String name, address, bluetooth;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +34,9 @@ public class SettingActivity extends AppCompatActivity {
         shopAddredd = findViewById(R.id.shopAddress);
         saveButton = findViewById(R.id.saveButton);
         bluetoothName = findViewById(R.id.bluetoothName);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         shopName.setText(sharedPreferences.getString("SHOP_NAME", null));
         shopAddredd.setText(sharedPreferences.getString("SHOP_ADDRESS",null));
         bluetoothName.setText(sharedPreferences.getString("BLUETOOTH_NAME",null));

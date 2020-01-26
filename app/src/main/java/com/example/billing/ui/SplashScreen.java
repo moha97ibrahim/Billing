@@ -39,14 +39,14 @@ public class SplashScreen extends AppCompatActivity {
         imageView.startAnimation(animation);
 
 
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (!bluetoothAdapter.isEnabled()) {
-            Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBT, 0);
-        }
-
-        if(ContextCompat.checkSelfPermission(SplashScreen.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (!bluetoothAdapter.isEnabled()) {
+//            Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//            startActivityForResult(enableBT, 0);0
+//
+//        } else
+        if (ContextCompat.checkSelfPermission(SplashScreen.this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -54,8 +54,8 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 }
-            },5000);
-        }else {
+            }, 5000);
+        } else {
             requestStoragepPermission();
         }
 
@@ -63,14 +63,14 @@ public class SplashScreen extends AppCompatActivity {
     }
 
     private void requestStoragepPermission() {
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)){
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE) ) {
             new AlertDialog.Builder(this)
                     .setTitle("Permission Needed")
                     .setMessage("This permission is needed")
                     .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(SplashScreen.this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+                            ActivityCompat.requestPermissions(SplashScreen.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -80,33 +80,33 @@ public class SplashScreen extends AppCompatActivity {
                         }
                     })
                     .create().show();
-        }else{
-            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent i = new Intent(SplashScreen.this,MainActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            },5000);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Intent i = new Intent(SplashScreen.this, MainActivity.class);
+//                    startActivity(i);
+//                    finish();
+//                }
+//            }, 5000);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == STORAGE_PERMISSION_CODE){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent i = new Intent(SplashScreen.this,MainActivity.class);
+                        Intent i = new Intent(SplashScreen.this, MainActivity.class);
                         startActivity(i);
                         finish();
                     }
-                },5000);
-            }else{
+                }, 5000);
+            } else {
             }
         }
     }

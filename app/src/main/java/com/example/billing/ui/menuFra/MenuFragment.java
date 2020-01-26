@@ -26,6 +26,9 @@ import androidx.loader.content.Loader;
 
 import com.example.billing.R;
 import com.example.billing.addFoodDB.BillContract;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 
 
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
     MenuCursorAdapter menuCursorAdapter;
     private final int CART_LOADER = 1;
     private Button addBtn;
+    private AdView mAdView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -63,6 +67,12 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
         menuFoodListView.setEmptyView(textView);
         menuCursorAdapter = new MenuCursorAdapter(getActivity(), null);
         menuFoodListView.setAdapter(menuCursorAdapter);
+        mAdView = root.findViewById(R.id.adView);
+//        mAdView.setAdSize(AdSize.BANNER);
+//        mAdView.setAdUnitId("a-app-pub-8942221596028723/2944293502");
+
+
+
         getActivity().getSupportLoaderManager().initLoader(CART_LOADER, null, this);
         return root;
     }
@@ -95,6 +105,7 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+
     }
 
     @Override
@@ -110,6 +121,12 @@ public class MenuFragment extends Fragment implements LoaderManager.LoaderCallba
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+    }
 
     @Override
     public void onStop() {

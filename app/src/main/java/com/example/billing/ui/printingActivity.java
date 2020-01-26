@@ -132,35 +132,34 @@ public class printingActivity extends AppCompatActivity {
         buttonprint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (sharedPreferences.getString("BLUETOOTH_NAME", null).length() > 0) {
-                    try {
-                        openBlueToothPrinter();
-                        if (CONNECTER) {
-                            printerName.setText("Printing");
-                            printData();
-                            BillDbHelper dbHelper = new BillDbHelper(getApplicationContext());
-                            saveData(dbHelper);
-                            dbHelper.truncate();
-                            buttonprint.setText("Done");
-                            Intent i = new Intent(printingActivity.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
-                            inputStream.close();
-                        } else {
-                            Toast.makeText(printingActivity.this, "Printer Not Connected", Toast.LENGTH_SHORT).show();
-                        }
-
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                } else {
-                    Intent seting = new Intent(printingActivity.this, SettingActivity.class);
-                    startActivity(seting);
-                }
+                print();
             }
         });
 
+    }
+
+    private void print() {
+        if (sharedPreferences.getString("BLUETOOTH_NAME", null).length() > 0) {
+            try {
+                openBlueToothPrinter();
+                if (CONNECTER) {
+                    buttonprint.setVisibility(View.INVISIBLE);
+                    printerName.setText("Printing");
+                    printData();
+                    inputStream.close();
+                } else {
+                    Toast.makeText(printingActivity.this, "Printer Not Connected", Toast.LENGTH_SHORT).show();
+                    buttonprint.setVisibility(View.VISIBLE);
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            buttonprint.setVisibility(View.VISIBLE);
+            Intent seting = new Intent(printingActivity.this, SettingActivity.class);
+            startActivity(seting);
+        }
     }
 
     private String getMessage() {
@@ -369,18 +368,23 @@ public class printingActivity extends AppCompatActivity {
             arrangeData();
             String message = getMessage();
             String message2 = getMessage2();
-            //message += "\n";
-
-
             outputStream.write(message.getBytes());
             outputStream.write(message2.getBytes());
             outputStream.flush();
             stopWorker = true;
             outputStream.close();
-
-            //printerName.setText("printing......");
+            buttonprint.setText("Done");
+            Intent i = new Intent(printingActivity.this, MainActivity.class);
+            startActivity(i);
+            finish();
+            saveData(dbHelper);
+            dbHelper.truncate();
         } catch (Exception ex) {
+
             ex.printStackTrace();
+        } finally {
+            Toast.makeText(printingActivity.this, "Printer Not Connected", Toast.LENGTH_SHORT).show();
+            buttonprint.setVisibility(View.VISIBLE);
         }
     }
 

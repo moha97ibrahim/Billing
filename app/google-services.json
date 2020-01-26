@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "971112471357",
+    "firebase_url": "https://billing-dcc08.firebaseio.com",
+    "project_id": "billing-dcc08",
+    "storage_bucket": "billing-dcc08.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:971112471357:android:2aff4fd84eb8c3cb8dc354",
+        "android_client_info": {
+          "package_name": "com.example.billing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "971112471357-vk9asnr3qdcghhmu7181e2e3d4j19hi3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOGJToRRYmVUwErfESyyU2JbUZ_fnNq38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "971112471357-vk9asnr3qdcghhmu7181e2e3d4j19hi3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

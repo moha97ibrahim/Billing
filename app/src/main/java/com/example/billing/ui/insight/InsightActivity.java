@@ -430,19 +430,19 @@ public class InsightActivity extends AppCompatActivity implements LoaderManager.
         insightCursorAdapter.swapCursor(null);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.insight_menu,menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.printData:
-                createPDFFile(Common.getAppPath(InsightActivity.this) + "test_pdf");
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.insight_menu,menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.printData:
+//                createPDFFile(Common.getAppPath(InsightActivity.this) + "test_pdf");
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }
